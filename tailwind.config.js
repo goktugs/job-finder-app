@@ -30,7 +30,19 @@ module.exports = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
+      fontFamily: {
+        "josefin-sans": ["Josefin Sans", "sans-serif"],
+        "roboto-slab": ["Roboto Slab", "serif"],
+        kalam: ["Kalam", "cursive"],
+      },
+      colors: {
+        "bg-main-black": "#303131",
+        "main-green": "#bfe031",
+        "main-purple": "#352e52",
+        "main-gray": "#202020",
+      },
     },
   },
+
   plugins: [require("tailwindcss-animate")],
 };
