@@ -1,5 +1,5 @@
 import React from "react";
 
 export default function Home() {
-  return <div>Home</div>;
+  return <main className="flex flex-1 container">Home</main>;
 }
