@@ -36,10 +36,8 @@ module.exports = {
         kalam: ["Kalam", "cursive"],
       },
       colors: {
-        "bg-main-black": "#303131",
-        "main-green": "#bfe031",
-        "main-purple": "#352e52",
-        "main-gray": "#202020",
+        "main-green": "#499969",
+        "main-gray": "#3c3737",
       },
     },
   },
