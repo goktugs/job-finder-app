@@ -17,7 +17,7 @@ export default function SingleJob(job: IJobs) {
       className={clsx(
         "pl-4 pr-2 py-4 shadow-lg flex items-center rounded-md md:px-16 hover:transition hover:shadow-xl hover:bg-gray-50 cursor-pointer",
         listType
-          ? "flex-col text-center justify-center items-center space-y-2"
+          ? "flex-col text-center justify-center items-center space-y-2 "
           : "flex-row "
       )}
     >

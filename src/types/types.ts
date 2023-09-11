@@ -3,7 +3,7 @@ export interface IJobs {
   name: string;
   companyName: string;
   location: string;
-  salary: string;
+  salary: number;
   description: string;
   createdAT: string;
 }
