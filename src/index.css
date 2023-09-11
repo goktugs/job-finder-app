@@ -32,3 +32,12 @@
   -webkit-backdrop-filter: blur(2.9px);
   border: 1px solid rgba(254, 239, 239, 0.1);
 }
+
+.morphism2 {
+  background: rgba(245, 158, 11, 0.15);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+}

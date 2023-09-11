@@ -10,6 +10,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { RoughNotation } from "react-rough-notation";
 import { Link } from "react-router-dom";
 import * as z from "zod";
 
@@ -34,9 +35,13 @@ export default function Login() {
   return (
     <div className="w-full flex flex-col justify-center text-white font-josefin-sans items-center h-full text-center space-y-12">
       <div className="flex flex-col space-y-6">
-        <h1 className="text-3xl  font-bold ">Sign In To Job Finder </h1>
+        <h1 className="text-3xl text-main-gray  font-bold ">
+          Sign In To Job Finder{" "}
+        </h1>
         <h3>
-          Or{" "}
+          <RoughNotation show={true} type={"crossed-off"} color="red">
+            <span className="text-main-green">Or </span>
+          </RoughNotation>
           <span className="text-main-green border-b-4 border-main-green">
             <Link to="/signup">create your account</Link>
           </span>

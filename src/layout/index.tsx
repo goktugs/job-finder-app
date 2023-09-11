@@ -7,7 +7,7 @@ import { Toaster } from "@/components/ui/toaster";
 
 export default function Layout() {
   return (
-    <div className="container h-full">
+    <div className="container h-screen flex flex-col">
       <Header />
       <Main>
         <Outlet />
