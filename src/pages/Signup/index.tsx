@@ -1,90 +1,124 @@
+// fixme error yok
+
 import { useMultiplestepForm } from "@/hooks/useMultipleStepForm";
-import React, { FormEvent } from "react";
+import React, { useState } from "react";
 import Sidebar from "@/components/form/Sidebar";
 import { AnimatePresence } from "framer-motion";
 import SuccessMessage from "@/components/form/Success";
 import { Button } from "@/components/ui/button";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 import UserInfoForm from "@/components/form/UserInfoForm";
-import { Form } from "@/components/ui/form";
+import PersonalInfoForm from "@/components/form/PersonalInfoForm";
+import SkillsExpForm from "@/components/form/SkillsExpForm";
+import EducationForm from "@/components/form/EducationForm";
 
-const AllFormItemsSchema = z.object({
-  name: z.string().min(2).max(50),
-  surname: z.string().min(2).max(50),
-  email: z.string().email(),
-  password: z.string().min(8),
-  profilePicture: z.string().url(),
-  dateOfBirth: z.string(),
-  phone: z.string(),
-  address: z.object({
-    details: z.string(),
-    city: z.string(),
-    country: z.string(),
-  }),
-  skills: z.array(z.string()),
-  experience: z.array(
-    z.object({
-      company: z.string(),
-      position: z.string(),
-      startDate: z.string(),
-      endDate: z.string(),
-    })
-  ),
-  education: z.array(
-    z.object({
-      institution: z.string(),
-      degree: z.string(),
-      startDate: z.string(),
-      endDate: z.string(),
-    })
-  ),
-  languages: z.array(
-    z.object({
-      language: z.string(),
-      level: z.string(),
-    })
-  ),
-});
+interface UserInfoForm {
+  name: string;
+  surname: string;
+  email: string;
+  password: string;
+}
+
+interface PersonalInfoForm {
+  phone: string;
+  address: {
+    details: string;
+    city: string;
+    country: string;
+  };
+  profile: string;
+}
+
+interface SkillsExpForm {
+  skills: string[];
+  experience: {
+    company: string;
+    position: string;
+    startDate: string;
+    endDate: string;
+  }[];
+}
+
+interface EducationForm {
+  education: {
+    institution: string;
+    degree: string;
+    startDate: string;
+    endDate: string;
+  }[];
+  languages: {
+    language: string;
+    level: string;
+  }[];
+}
+
+export type AllFormValues = UserInfoForm &
+  PersonalInfoForm &
+  SkillsExpForm &
+  EducationForm;
+
+const initialValues: AllFormValues = {
+  name: "",
+  surname: "",
+  email: "",
+  password: "",
+  phone: "",
+  address: {
+    details: "",
+    city: "",
+    country: "",
+  },
+  profile: "",
+  skills: [],
+  experience: [
+    {
+      company: "",
+      position: "",
+      startDate: "",
+      endDate: "",
+    },
+  ],
+  education: [
+    {
+      institution: "",
+      degree: "",
+      startDate: "",
+      endDate: "",
+    },
+  ],
+  languages: [
+    {
+      language: "",
+      level: "",
+    },
+  ],
+};
 
 export default function Signup() {
+  const [formData, setFormData] = useState(initialValues);
+
+  console.log(formData);
+
   const {
     previousStep,
     nextStep,
     currentStepIndex,
     isFirstStep,
     isLastStep,
-    steps,
     goTo,
     showSuccessMsg,
   } = useMultiplestepForm(4);
 
-  const form = useForm<Partial<z.infer<typeof AllFormItemsSchema>>>({
-    resolver: zodResolver(AllFormItemsSchema),
-    defaultValues: {
-      name: "",
-      surname: "",
-      email: "",
-      password: "",
-      profilePicture: "",
-      dateOfBirth: "",
-      phone: "",
-      address: {
-        details: "",
-        city: "",
-        country: "",
-      },
-      skills: [],
-      experience: [],
-      education: [],
-      languages: [],
-    },
-  });
-
-  function handleOnSubmit(values: z.infer<typeof AllFormItemsSchema>) {
-    console.log(values);
+  function updateForm(fieldToUpdate: Partial<UserInfoForm>) {
+    setFormData({ ...formData, ...fieldToUpdate });
   }
+
+  const handleOnSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    // if (Object.values(errors).some((error) => error)) {
+    //   return;
+    // }
+    nextStep();
+  };
 
   return (
     <div className="w-full flex justify-center items-center h-full">
@@ -108,61 +142,68 @@ export default function Signup() {
               <SuccessMessage />
             </AnimatePresence>
           ) : (
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(handleOnSubmit)}
-                className="w-full flex flex-col justify-between h-full"
-              >
-                <AnimatePresence mode="wait">
-                  {currentStepIndex === 0 && (
-                    <UserInfoForm key="step1" {...form} />
-                  )}
-                  {/* {currentStepIndex === 1 && (
-                    <PlanForm
-                      key="step2"
-                      {...formData}
-                      updateForm={updateForm}
-                    />
-                  )}
-                  {currentStepIndex === 2 && (
-                    <AddonsForm
-                      key="step3"
-                      {...formData}
-                      updateForm={updateForm}
-                    />
-                  )}
-                  {currentStepIndex === 3 && (
-                    <FinalStep key="step4" {...formData} goTo={goTo} />
-                  )} */}
-                </AnimatePresence>
-                <div className="w-full items-center flex justify-between">
-                  <div className="">
+            <form
+              onSubmit={handleOnSubmit}
+              className="w-full flex flex-col justify-between h-full"
+            >
+              <AnimatePresence mode="wait">
+                {currentStepIndex === 0 && (
+                  <UserInfoForm
+                    key="step1"
+                    {...formData}
+                    updateForm={updateForm}
+                  />
+                )}
+                {currentStepIndex === 1 && (
+                  <PersonalInfoForm
+                    key="step2"
+                    {...formData}
+                    updateForm={updateForm}
+                  />
+                )}
+                {currentStepIndex === 2 && (
+                  <SkillsExpForm
+                    key="step3"
+                    {...formData}
+                    updateForm={updateForm}
+                  />
+                )}
+                {currentStepIndex === 3 && (
+                  <EducationForm
+                    key="step4"
+                    {...formData}
+                    updateForm={updateForm}
+                  />
+                )}
+              </AnimatePresence>
+              <div className="w-full items-center flex justify-between">
+                <div className="">
+                  <Button
+                    onClick={previousStep}
+                    type="button"
+                    variant="ghost"
+                    className={`${
+                      isFirstStep
+                        ? "invisible"
+                        : "visible p-0 text-neutral-200 hover:text-white"
+                    }`}
+                  >
+                    Go Back
+                  </Button>
+                </div>
+                <div className="text-white ">{`${currentStepIndex + 1}/4`}</div>
+                <div className="flex items-center">
+                  <div className="relative after:pointer-events-none after:absolute after:inset-px after:rounded-[11px] after:shadow-highlight after:shadow-white/10 focus-within:after:shadow-[#77f6aa] after:transition">
                     <Button
-                      onClick={previousStep}
-                      type="button"
-                      variant="ghost"
-                      className={`${
-                        isFirstStep
-                          ? "invisible"
-                          : "visible p-0 text-neutral-200 hover:text-white"
-                      }`}
+                      type="submit"
+                      className="relative text-neutral-200 bg-neutral-900 border border-black/20 shadow-input shadow-black/10 rounded-xl hover:text-white"
                     >
-                      Go Back
+                      {isLastStep ? "Confirm" : "Next Step"}
                     </Button>
                   </div>
-                  <div className="flex items-center">
-                    <div className="relative after:pointer-events-none after:absolute after:inset-px after:rounded-[11px] after:shadow-highlight after:shadow-white/10 focus-within:after:shadow-[#77f6aa] after:transition">
-                      <Button
-                        type="submit"
-                        className="relative text-neutral-200 bg-neutral-900 border border-black/20 shadow-input shadow-black/10 rounded-xl hover:text-white"
-                      >
-                        {isLastStep ? "Confirm" : "Next Step"}
-                      </Button>
-                    </div>
-                  </div>
                 </div>
-              </form>
-            </Form>
+              </div>
+            </form>
           )}
         </main>
       </div>

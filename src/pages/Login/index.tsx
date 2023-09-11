@@ -10,6 +10,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useMutation } from "react-query";
 import { RoughNotation } from "react-rough-notation";
 import { Link } from "react-router-dom";
 import * as z from "zod";
@@ -28,9 +29,26 @@ export default function Login() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof LoginSchema>) {
-    console.log(values);
-  }
+  const { mutate, isLoading } = useMutation(
+    async (data: z.infer<typeof LoginSchema>) => {
+      const res = await fetch(
+        "https://645e4f8b12e0a87ac0ed1b2d.mockapi.io/users",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+      const data_1 = await res.json();
+      console.log(data_1);
+    }
+  );
+
+  const onSubmit = (data: z.infer<typeof LoginSchema>) => {
+    mutate(data);
+  };
 
   return (
     <div className="w-full flex flex-col justify-center text-white font-josefin-sans items-center h-full text-center space-y-12">
@@ -62,7 +80,7 @@ export default function Login() {
                   <Input placeholder="E-Mail" {...field} />
                 </FormControl>
                 <FormMessage
-                  className="text-red-700 text-xs 
+                  className="text-white text-sm font-semibold 
                   animate-[bounce_3s_ease-in-out_infinite]
                 "
                 />
@@ -81,7 +99,7 @@ export default function Login() {
                   <Input placeholder="Password" {...field} />
                 </FormControl>
                 <FormMessage
-                  className="text-red-700 text-xs 
+                  className="text-white text-sm font-semibold 
                   animate-[bounce_3s_ease-in-out_infinite]
                 "
                 />
