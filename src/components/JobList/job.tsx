@@ -1,4 +1,3 @@
-import React from "react";
 import { Button } from "../ui/button";
 import {
   BackpackIcon,
@@ -8,7 +7,10 @@ import {
 } from "@radix-ui/react-icons";
 import { format } from "date-fns";
 import { IJobs } from "@/types/types";
-export default function Job(job: IJobs) {
+import { useListTypeStore } from "@/store/listTypeSlice";
+export default function SingleJob(job: IJobs) {
+  const listType = useListTypeStore((state) => state.listType);
+
   return (
     <div className="pl-4 pr-2 py-4 shadow-lg flex items-center rounded-md md:px-16 hover:transition hover:shadow-xl hover:bg-gray-50 cursor-pointer">
       <BackpackIcon className="w-6 h-6 md:w-12 md:h-12 " />
