@@ -40,11 +40,11 @@ export default function Header() {
                 </svg>
               </div>
               <ul className="MENU-LINK-MOBILE-OPEN flex flex-col items-center justify-between min-h-[250px]">
-                <li className=" my-8 uppercase text-white ">
+                <li className=" my-8 uppercase text-white   ">
                   <NavLink
                     className={({ isActive }) =>
                       isActive
-                        ? "text-white bg-main-green py-4 px-8 rounded-xl font-bold border-4 border-main-purple  "
+                        ? "text-white  bg-main-green py-4 px-8 rounded-xl border-2 border-white  "
                         : "animate-pulse"
                     }
                     to="/login"
@@ -57,7 +57,7 @@ export default function Header() {
                   <NavLink
                     className={({ isActive }) =>
                       isActive
-                        ? "text-white bg-main-green py-4 px-8 rounded-xl font-bold border-4 border-main-purple  "
+                        ? "text-white bg-main-green py-4 px-8 rounded-xl font-bold border-4 border-white  "
                         : "animate-pulse"
                     }
                     to="/signup"
@@ -71,11 +71,11 @@ export default function Header() {
           </section>
 
           <ul className="DESKTOP-MENU hidden space-x-4 lg:flex">
-            <li className=" my-8 uppercase px-8 py-4 rounded-xl text-white ">
+            <li className=" my-8 uppercase px-8 py-4 rounded-xl text-main-gray ">
               <NavLink
                 className={({ isActive }) =>
                   isActive
-                    ? " font-bold border-b-2 bg-main-green px-8 py-2 border-main-purple hover:border-main-purple rounded-xl hover:border-b-2 transition duration-300 ease-in-out"
+                    ? " font-bold border-b-2 bg-main-green px-8 py-2 border-main-purple hover:border-main-purple rounded-xl hover:border-b-2 transition duration-300 ease-in-out text-white"
                     : "px-8 py-2"
                 }
                 to="/login"
@@ -83,11 +83,11 @@ export default function Header() {
                 Login
               </NavLink>
             </li>
-            <li className=" my-8 uppercase px-8 py-4 rounded-xl text-white ">
+            <li className=" my-8 uppercase px-8 py-4 rounded-xl text-main-gray ">
               <NavLink
                 className={({ isActive }) =>
                   isActive
-                    ? " font-bold border-b-2 bg-main-green px-8 py-2 border-main-purple hover:border-main-purple rounded-xl hover:border-b-2 transition duration-300 ease-in-out"
+                    ? " font-bold border-b-2 bg-main-green px-8 py-2 border-main-purple hover:border-main-purple rounded-xl hover:border-b-2 transition duration-300 ease-in-out text-white"
                     : "px-8 py-2"
                 }
                 to="/signup"

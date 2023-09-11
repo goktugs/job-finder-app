@@ -5,5 +5,5 @@ type MainProps = {
 };
 
 export default function Main({ children }: MainProps) {
-  return <main className="flex-1 container">{children}</main>;
+  return <main className="flex-1  ">{children}</main>;
 }
