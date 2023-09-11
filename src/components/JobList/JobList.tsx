@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "../ui/button";
 import { useEffect } from "react";
+import { useLocationStore } from "@/store/locationSlice";
 
 export default function JobList() {
   const filterByQuery = useFilterStore((state) => state.filterQuery);
@@ -33,13 +34,20 @@ export default function JobList() {
   const sortBySalary = useSortStore((state) => state.sortBySalary);
   const setSortBySalary = useSortStore((state) => state.setSortBySalary);
 
+  const setLocations = useLocationStore((state) => state.setLocations);
+
   const { data, isLoading, isError, error } = useQuery({
     queryKey: "jobs",
     queryFn: () =>
       fetch("https://645e4f8b12e0a87ac0ed1b2d.mockapi.io/jobs").then((res) =>
         res.json()
       ),
+    onSuccess: (data) => {
+      const locations = data.map((job: IJobs) => job.location);
+      setLocations(locations);
+    },
   });
+
   useEffect(() => {
     setSortBySalary("");
   }, [setSortBySalary, sortByDate]);

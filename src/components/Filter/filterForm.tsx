@@ -1,8 +1,6 @@
 import { Input } from "../ui/input";
 import { useFilterStore } from "@/store/filterSlice";
-import { Toggle } from "@/components/ui/toggle";
-import { useListTypeStore } from "@/store/listTypeSlice";
-import { WidthIcon } from "@radix-ui/react-icons";
+import FilterDropdown from "./FilterDropdown";
 
 const SORTBY_OPTIONS = [
   {
@@ -55,6 +53,7 @@ export default function FilterForm() {
         value={filter}
         onChange={handleChange}
       />
+      <FilterDropdown />
     </div>
   );
 }
