@@ -8,11 +8,19 @@ import {
 import { format } from "date-fns";
 import { IJobs } from "@/types/types";
 import { useListTypeStore } from "@/store/listTypeSlice";
+import clsx from "clsx";
 export default function SingleJob(job: IJobs) {
   const listType = useListTypeStore((state) => state.listType);
 
   return (
-    <div className="pl-4 pr-2 py-4 shadow-lg flex items-center rounded-md md:px-16 hover:transition hover:shadow-xl hover:bg-gray-50 cursor-pointer">
+    <div
+      className={clsx(
+        "pl-4 pr-2 py-4 shadow-lg flex items-center rounded-md md:px-16 hover:transition hover:shadow-xl hover:bg-gray-50 cursor-pointer",
+        listType
+          ? "flex-col text-center justify-center items-center space-y-2"
+          : "flex-row "
+      )}
+    >
       <BackpackIcon className="w-6 h-6 md:w-12 md:h-12 " />
 
       <div className="flex-1 flex flex-col space-y-2 mx-4 md:mx-12">
@@ -29,7 +37,7 @@ export default function SingleJob(job: IJobs) {
           </div>
           <div className=" md:items-center text-gray-600 md:space-x-1 md:text-opacity-70 hidden md:flex  ">
             <SketchLogoIcon className="text-gray-600 fill-gray-600 md:w-4 md:h-4" />
-            <span className="text-xs md:text-lg">$ {job.salary}</span>
+            <span className="text-xs md:text-lg">${job.salary}</span>
           </div>
         </div>
       </div>

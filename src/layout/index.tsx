@@ -5,7 +5,7 @@ import Main from "./Main";
 
 export default function Layout() {
   return (
-    <div className="container">
+    <div className="container h-full">
       <Header />
       <Main>
         <Outlet />
