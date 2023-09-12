@@ -120,6 +120,7 @@ export default function SkillsExpForm({
                   <Calendar
                     mode="single"
                     selected={startDate}
+                    disabled={endDate ? { after: endDate } : undefined}
                     onSelect={(newStartDate) => {
                       setStartDate(newStartDate);
                       updateForm({
@@ -159,6 +160,7 @@ export default function SkillsExpForm({
                   <Calendar
                     mode="single"
                     selected={endDate}
+                    disabled={startDate ? { before: startDate } : undefined}
                     onSelect={(newEndDate) => {
                       setEndDate(newEndDate);
                       updateForm({

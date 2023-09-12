@@ -10,12 +10,15 @@ import UserInfoForm from "@/components/form/UserInfoForm";
 import PersonalInfoForm from "@/components/form/PersonalInfoForm";
 import SkillsExpForm from "@/components/form/SkillsExpForm";
 import EducationForm from "@/components/form/EducationForm";
+import { useMutation } from "react-query";
+import CryptoJS from "crypto-js";
 
 interface UserInfoForm {
   name: string;
   surname: string;
   email: string;
   password: string;
+  isEmployer: boolean;
 }
 
 interface PersonalInfoForm {
@@ -61,6 +64,7 @@ const initialValues: AllFormValues = {
   surname: "",
   email: "",
   password: "",
+  isEmployer: false,
   phone: "",
   address: {
     details: "",
@@ -93,6 +97,14 @@ const initialValues: AllFormValues = {
   ],
 };
 
+function encryptPassword(
+  password: string | CryptoJS.lib.WordArray,
+  key: string | CryptoJS.lib.WordArray
+) {
+  const encrypted = CryptoJS.AES.encrypt(password, key).toString();
+  return encrypted;
+}
+
 export default function Signup() {
   const [formData, setFormData] = useState(initialValues);
 
@@ -111,13 +123,45 @@ export default function Signup() {
   function updateForm(fieldToUpdate: Partial<UserInfoForm>) {
     setFormData({ ...formData, ...fieldToUpdate });
   }
+  // fixme needs rewrite
+  const createUser = async (formData: AllFormValues) => {
+    await fetch(`${import.meta.env.VITE_API_URL}/users`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    }).then((res) => {
+      if (res.ok) {
+        console.log(res);
+        const passwordFromServer = formData.password;
+        const encryptionKey = import.meta.env.VITE_SUPER_SECRET_KEY;
+
+        if (passwordFromServer) {
+          const encryptedPassword = encryptPassword(
+            passwordFromServer,
+            encryptionKey
+          );
+          console.log("burdayım3", encryptedPassword);
+          localStorage.setItem("encryptedPassword", encryptedPassword);
+        }
+        localStorage.setItem("id", formData.surname);
+      } else {
+        console.log("error");
+      }
+    });
+  };
+
+  const { mutate, isLoading } = useMutation(createUser);
 
   const handleOnSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // if (Object.values(errors).some((error) => error)) {
-    //   return;
-    // }
+
     nextStep();
+    if (isLastStep && !isLoading) {
+      console.log("başarılı");
+      mutate(formData);
+    }
   };
 
   return (
