@@ -1,41 +1,9 @@
+// fixme filterQuery should stay on url
+
 import { Input } from "../ui/input";
 import { useFilterStore } from "@/store/filterSlice";
 import FilterDropdown from "./FilterDropdown";
 
-const SORTBY_OPTIONS = [
-  {
-    id: 1,
-    label: "Date Post",
-  },
-  {
-    id: 2,
-    label: "Salary Low to High",
-  },
-
-  {
-    id: 3,
-    label: "Job Type",
-  },
-  {
-    id: 4,
-    label: "Salary High to Low",
-  },
-];
-
-const AIRLINES_OPTIONS = [
-  {
-    id: 1,
-    label: "Location",
-  },
-  {
-    id: 2,
-    label: "Job Type",
-  },
-  {
-    id: 3,
-    label: "Salary",
-  },
-];
 export default function FilterForm() {
   const filter = useFilterStore((state) => state.filterQuery);
   const setFilter = useFilterStore((state) => state.setFilterQuery);
