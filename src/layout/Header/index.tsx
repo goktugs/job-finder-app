@@ -1,4 +1,6 @@
 // fixme fazladan spinner fvar nerede bulamadım
+// fixme Login signup logic profile kısmının yeri değişmesi lazım bence
+// fixme burası bozuk düzeltilmesi gerek
 
 import { useState } from "react";
 import { useQuery } from "react-query";
@@ -25,7 +27,6 @@ export default function Header() {
             ?.replace(/"/g, "")}`,
         },
       }).then((res) => res.json()),
-    enabled: !!localStorage.getItem("accessToken"),
   });
 
   const exitHandler = () => {
