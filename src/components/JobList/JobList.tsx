@@ -1,79 +1,65 @@
+// fixme grid olduğu zaman eğer grid tek satır ise karelerin boyu uzuyor
+
 import { useQuery } from "react-query";
 
-import { IJobs } from "@/types/types";
+import { IJobs, IJobsResponse } from "@/types/types";
 import LoadingSpinner from "../ui/loadingSpinner";
 import { useFilterStore } from "@/store/filterSlice";
-import SingleJob from "./Job";
+import SingleJob from "./SingleJob";
 import { useListTypeStore } from "@/store/listTypeSlice";
-import { Toggle } from "../ui/toggle";
-import { WidthIcon } from "@radix-ui/react-icons";
+
 import clsx from "clsx";
 import { useSortStore } from "@/store/sortSlice";
-
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Button } from "../ui/button";
-import { useEffect } from "react";
-import { useLocationStore } from "@/store/locationSlice";
+
+import { useEffect, useState } from "react";
+import JobFilters from "./JobFilters";
+import ViewToggle from "./ViewToggle";
+import { ArrowLeftIcon, ArrowRightIcon } from "@radix-ui/react-icons";
+import useDebounce from "@/hooks/useDebounce";
 
 export default function JobList() {
-  const filterByQuery = useFilterStore((state) => state.filterQuery);
-
+  const [page, setPage] = useState(1);
+  const query = useFilterStore((state) => state.filterQuery);
+  const debouncedFilterQuery = useDebounce(query, 800);
+  const { sortType } = useSortStore();
   const listType = useListTypeStore((state) => state.listType);
-  const setListType = useListTypeStore((state) => state.setListType);
 
-  const sortByDate = useSortStore((state) => state.sortByDate);
-  const setSortByDate = useSortStore((state) => state.setSortByDate);
-  const sortBySalary = useSortStore((state) => state.sortBySalary);
-  const setSortBySalary = useSortStore((state) => state.setSortBySalary);
-
-  const setLocations = useLocationStore((state) => state.setLocations);
-
-  const { data, isLoading, isError, error } = useQuery({
-    queryKey: "jobs",
-    queryFn: () =>
-      fetch("https://645e4f8b12e0a87ac0ed1b2d.mockapi.io/jobs").then((res) =>
-        res.json()
-      ),
-    onSuccess: (data) => {
-      const locations = data.map((job: IJobs) => job.location);
-      setLocations(locations);
-    },
-  });
-
+  let url = `${import.meta.env.VITE_API_URL}/jobs?page=${page}`;
   useEffect(() => {
-    setSortBySalary("");
-  }, [setSortBySalary, sortByDate]);
-  const filteredData = data?.filter((job: IJobs) => {
-    return job.name.toLowerCase().includes(filterByQuery.toLowerCase());
-  });
+    if (debouncedFilterQuery) {
+      setPage(1);
+    }
+  }, [debouncedFilterQuery]);
 
-  if (sortByDate === "asc") {
-    filteredData?.sort((a: IJobs, b: IJobs) => {
-      return new Date(a.createdAT).getTime() - new Date(b.createdAT).getTime();
-    });
-  } else if (sortByDate === "desc") {
-    filteredData?.sort((a: IJobs, b: IJobs) => {
-      return new Date(b.createdAT).getTime() - new Date(a.createdAT).getTime();
-    });
+  if (debouncedFilterQuery) {
+    url += `&search%5Bfield%5D=name&search%5Bquery%5D=${debouncedFilterQuery}`;
   }
 
-  if (sortBySalary === "asc") {
-    filteredData?.sort((a: IJobs, b: IJobs) => {
-      return a.salary - b.salary;
-    });
-  } else if (sortBySalary === "desc") {
-    filteredData?.sort((a: IJobs, b: IJobs) => {
-      return b.salary - a.salary;
-    });
+  if (sortType !== "none") {
+    const sortTypeArr = sortType.split(" ");
+
+    url += `&orderBy%5Bfield%5D=${sortTypeArr[0]}&orderBy%5Bdirection%5D=${sortTypeArr[1]}`;
   }
+
+  const fetchJobs = async () => {
+    const res = await fetch(url, {
+      headers: {
+        accept: "application/json",
+        Authorization: `Bearer ${localStorage
+          .getItem("accessToken")
+          ?.replace(/"/g, "")}`,
+      },
+    }).then((res) => res.json());
+    return res;
+  };
+
+  const { isLoading, isError, error, data, isPreviousData } =
+    useQuery<IJobsResponse>({
+      queryKey: ["jobs", page, debouncedFilterQuery, sortType],
+      queryFn: () => fetchJobs(),
+      keepPreviousData: true,
+    });
 
   if (isError) {
     return <span>Error: {(error as Error).message}</span>;
@@ -82,63 +68,30 @@ export default function JobList() {
   return (
     <>
       <div className="flex justify-between">
-        <div className="flex gap-2">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline">Date</Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="morphismGlass">
-              <DropdownMenuLabel className="text-center">
-                Sort By
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator className="bg-main-green" />
-              <DropdownMenuRadioGroup
-                value={sortByDate}
-                onValueChange={(value) => setSortByDate(value)}
-              >
-                <DropdownMenuRadioItem value="asc">Asc</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="desc">Desc</DropdownMenuRadioItem>
-              </DropdownMenuRadioGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline">Salary</Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="morphismGlass">
-              <DropdownMenuLabel className="text-center">
-                Sort By
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator className="bg-main-green" />
-              <DropdownMenuRadioGroup
-                value={sortBySalary}
-                onValueChange={(value) => setSortBySalary(value)}
-              >
-                <DropdownMenuRadioItem value="asc">Asc</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="desc">Desc</DropdownMenuRadioItem>
-              </DropdownMenuRadioGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
+        <JobFilters />
+        <div className="flex space-x-4">
+          <div className="hidden md:flex md:items-center md:justify-center md:space-x-4">
+            <Button
+              onClick={() => setPage((old) => Math.max(old - 1, 0))}
+              disabled={page === 1}
+            >
+              <ArrowLeftIcon />
+            </Button>{" "}
+            <span>{page}/10</span>
+            <Button
+              onClick={() => {
+                if (!isPreviousData) {
+                  setPage((old) => old + 1);
+                }
+              }}
+              // Disable the Next Page button until we know a next page is available
+              disabled={isPreviousData || page === 10}
+            >
+              <ArrowRightIcon />
+            </Button>
+          </div>
+          <ViewToggle />
         </div>
-        <Toggle
-          aria-pressed={listType}
-          onClick={() => setListType(!listType)}
-          variant="default"
-          aria-label="Toggle Grid Row"
-          className="gap-2 border"
-        >
-          {listType ? (
-            <div className="flex space-x-2">
-              <WidthIcon className="w-4 h-4 transform transition-all rotate-180" />
-              <span>Grid</span>
-            </div>
-          ) : (
-            <div className="flex space-x-2">
-              <WidthIcon className="w-4 h-4 transform transition-all rotate-90" />
-              <span>Row</span>
-            </div>
-          )}
-        </Toggle>
       </div>
       <div
         className={clsx(
@@ -150,12 +103,16 @@ export default function JobList() {
       >
         {isLoading ? (
           <LoadingSpinner />
-        ) : filteredData?.length === 0 ? (
+        ) : data?.data.length === 0 ? (
           <div className="flex justify-center items-center h-full">
             <h1 className="text-2xl font-bold text-gray-500">No Jobs Found</h1>
           </div>
         ) : (
-          filteredData?.map((job: IJobs) => <SingleJob key={job.id} {...job} />)
+          <>
+            {data?.data.map((job: IJobs) => (
+              <SingleJob key={job.id} {...job} />
+            ))}
+          </>
         )}
       </div>
     </>

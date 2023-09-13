@@ -5,7 +5,7 @@ export interface IJobs {
   location: string;
   salary: number;
   description: string;
-  createdAT: string;
+  createdAt: string;
 }
 
 export interface IUser {
@@ -13,4 +13,13 @@ export interface IUser {
   profileImage: string;
   email: string;
   appliedJobs: string[];
+}
+
+export interface IJobsResponse {
+  data: IJobs[];
+  meta: {
+    total: number;
+    page: number;
+    perPage: number;
+  };
 }
