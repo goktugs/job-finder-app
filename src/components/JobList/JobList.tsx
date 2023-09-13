@@ -25,6 +25,8 @@ export default function JobList() {
   const { sortType } = useSortStore();
   const listType = useListTypeStore((state) => state.listType);
 
+  const { searchType } = useFilterStore();
+
   let url = `${import.meta.env.VITE_API_URL}/jobs?page=${page}`;
   useEffect(() => {
     if (debouncedFilterQuery) {
@@ -33,7 +35,7 @@ export default function JobList() {
   }, [debouncedFilterQuery]);
 
   if (debouncedFilterQuery) {
-    url += `&search%5Bfield%5D=name&search%5Bquery%5D=${debouncedFilterQuery}`;
+    url += `&search%5Bfield%5D=${searchType}&search%5Bquery%5D=${debouncedFilterQuery}`;
   }
 
   if (sortType !== "none") {
