@@ -7,3 +7,10 @@ export interface IJobs {
   description: string;
   createdAT: string;
 }
+
+export interface IUser {
+  id: string;
+  profileImage: string;
+  email: string;
+  appliedJobs: string[];
+}

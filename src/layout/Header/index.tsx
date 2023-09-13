@@ -1,8 +1,39 @@
+// fixme fazladan spinner fvar nerede bulamadım
+
 import { useState } from "react";
+import { useQuery } from "react-query";
 import { NavLink } from "react-router-dom";
+import { IUser } from "@/types/types";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import LoadingSpinner from "@/components/ui/loadingSpinner";
+import { Button } from "@/components/ui/button";
 
 export default function Header() {
   const [isNavOpen, setIsNavOpen] = useState(false);
+
+  const isLoggedIn = localStorage.getItem("accessToken");
+
+  const { data, isLoading } = useQuery<IUser>({
+    queryKey: "user",
+    queryFn: () =>
+      fetch(`${import.meta.env.VITE_API_URL}/profile`, {
+        headers: {
+          accept: "application/json",
+          Authorization: `Bearer ${localStorage
+            .getItem("accessToken")
+            ?.replace(/"/g, "")}`,
+        },
+      }).then((res) => res.json()),
+    enabled: !!localStorage.getItem("accessToken"),
+  });
+
+  const exitHandler = () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("id");
+    window.location.reload();
+  };
 
   return (
     <header className="flex justify-between px-6 py-4 items-center">
@@ -39,63 +70,114 @@ export default function Header() {
                   <line x1="6" y1="6" x2="18" y2="18" />
                 </svg>
               </div>
-              <ul className="MENU-LINK-MOBILE-OPEN flex flex-col items-center justify-between min-h-[250px]">
-                <li className=" my-8 uppercase text-white   ">
-                  <NavLink
-                    className={({ isActive }) =>
-                      isActive
-                        ? "text-white  bg-main-green py-4 px-8 rounded-xl border-2 border-white  "
-                        : "animate-pulse"
-                    }
-                    to="/login"
-                    onClick={() => setIsNavOpen(false)}
-                  >
-                    Login
-                  </NavLink>
-                </li>
-                <li className=" my-8 uppercase text-white ">
-                  <NavLink
-                    className={({ isActive }) =>
-                      isActive
-                        ? "text-white bg-main-green py-4 px-8 rounded-xl font-bold border-4 border-white  "
-                        : "animate-pulse"
-                    }
-                    to="/signup"
-                    onClick={() => setIsNavOpen(false)}
-                  >
-                    Sign Up
-                  </NavLink>
-                </li>
-              </ul>
+              {isLoggedIn ? (
+                isLoading ? (
+                  <LoadingSpinner />
+                ) : (
+                  <div className="w-full h-full flex flex-col items-center justify-center space-y-8">
+                    <Avatar className="w-48 h-48">
+                      <AvatarImage
+                        src={data?.profileImage}
+                        alt="profileImage"
+                      />
+                      <AvatarFallback>CN</AvatarFallback>
+                    </Avatar>
+                    <div className="text-white text-2xl font-bold">
+                      {data?.email}
+                    </div>
+                  </div>
+                )
+              ) : (
+                <ul className="MENU-LINK-MOBILE-OPEN flex flex-col items-center justify-between min-h-[250px]">
+                  <li className=" my-8 uppercase text-white   ">
+                    <NavLink
+                      className={({ isActive }) =>
+                        isActive
+                          ? "text-white  bg-main-green py-4 px-8 rounded-xl border-2 border-white  "
+                          : "animate-pulse"
+                      }
+                      to="/login"
+                      onClick={() => setIsNavOpen(false)}
+                    >
+                      Login
+                    </NavLink>
+                  </li>
+                  <li className=" my-8 uppercase text-white ">
+                    <NavLink
+                      className={({ isActive }) =>
+                        isActive
+                          ? "text-white bg-main-green py-4 px-8 rounded-xl font-bold border-4 border-white  "
+                          : "animate-pulse"
+                      }
+                      to="/signup"
+                      onClick={() => setIsNavOpen(false)}
+                    >
+                      Sign Up
+                    </NavLink>
+                  </li>
+                </ul>
+              )}
             </div>
           </section>
-
-          <ul className="DESKTOP-MENU hidden space-x-4 lg:flex">
-            <li className=" my-8 uppercase px-8 py-4 rounded-xl text-main-gray ">
-              <NavLink
-                className={({ isActive }) =>
-                  isActive
-                    ? " font-bold border-b-2 bg-main-green px-8 py-2 border-main-purple hover:border-main-purple rounded-xl hover:border-b-2 transition duration-300 ease-in-out text-white"
-                    : "px-8 py-2"
-                }
-                to="/login"
-              >
-                Login
-              </NavLink>
-            </li>
-            <li className=" my-8 uppercase px-8 py-4 rounded-xl text-main-gray ">
-              <NavLink
-                className={({ isActive }) =>
-                  isActive
-                    ? " font-bold border-b-2 bg-main-green px-8 py-2 border-main-purple hover:border-main-purple rounded-xl hover:border-b-2 transition duration-300 ease-in-out text-white"
-                    : "px-8 py-2"
-                }
-                to="/signup"
-              >
-                Sign Up
-              </NavLink>
-            </li>
-          </ul>
+          <div>
+            {isLoggedIn ? (
+              <div className="hidden lg:flex my-8">
+                {isLoading ? (
+                  <LoadingSpinner />
+                ) : (
+                  <>
+                    {" "}
+                    <Avatar className="w-12 h-12">
+                      <AvatarImage
+                        src={data?.profileImage}
+                        alt="profileImage"
+                      />
+                      <AvatarFallback>CN</AvatarFallback>
+                    </Avatar>
+                    <div className="flex flex-col items-start justify-center ml-4">
+                      <div className="text-main-gray text-lg font-bold">
+                        {data?.email}
+                      </div>
+                      <Button onClick={exitHandler}>Exit</Button>
+                    </div>
+                  </>
+                )}
+              </div>
+            ) : (
+              <ul className="DESKTOP-MENU hidden space-x-4 lg:flex">
+                {isLoading ? (
+                  <LoadingSpinner />
+                ) : (
+                  <>
+                    <li className=" my-8 uppercase px-8 py-4 rounded-xl text-main-gray ">
+                      <NavLink
+                        className={({ isActive }) =>
+                          isActive
+                            ? " font-bold border-b-2 bg-main-green px-8 py-2 border-main-purple hover:border-main-purple rounded-xl hover:border-b-2 transition duration-300 ease-in-out text-white"
+                            : "px-8 py-2"
+                        }
+                        to="/login"
+                      >
+                        Login
+                      </NavLink>
+                    </li>
+                    <li className=" my-8 uppercase px-8 py-4 rounded-xl text-main-gray ">
+                      <NavLink
+                        className={({ isActive }) =>
+                          isActive
+                            ? " font-bold border-b-2 bg-main-green px-8 py-2 border-main-purple hover:border-main-purple rounded-xl hover:border-b-2 transition duration-300 ease-in-out text-white"
+                            : "px-8 py-2"
+                        }
+                        to="/signup"
+                      >
+                        Sign Up
+                      </NavLink>
+                    </li>
+                  </>
+                )}
+              </ul>
+            )}
+          </div>
         </nav>
         <style>{`
       .hideMenuNav {

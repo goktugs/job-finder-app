@@ -5,7 +5,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Jobs from "./pages/Jobs";
 import NotFound from "./pages/NotFound";
-import ProtectedRoute from "./ProtectedRoute";
+import { Toaster } from "@/components/ui/toaster";
 
 function App() {
   return (
@@ -15,13 +15,12 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          <Route element={<ProtectedRoute />}>
-            <Route path="/jobs" element={<Jobs />} />
-          </Route>
+          <Route path="/jobs" element={<Jobs />} />
         </Route>
         <Route path="/404" element={<NotFound />} />
         <Route path="*" element={<Navigate to="/404" replace />} />
       </Routes>
+      <Toaster />
     </>
   );
 }

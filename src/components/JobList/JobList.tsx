@@ -1,7 +1,7 @@
 import { useQuery } from "react-query";
 
 import { IJobs } from "@/types/types";
-import Loading from "../ui/loading";
+import LoadingSpinner from "../ui/loadingSpinner";
 import { useFilterStore } from "@/store/filterSlice";
 import SingleJob from "./Job";
 import { useListTypeStore } from "@/store/listTypeSlice";
@@ -149,7 +149,7 @@ export default function JobList() {
         )}
       >
         {isLoading ? (
-          <Loading />
+          <LoadingSpinner />
         ) : filteredData?.length === 0 ? (
           <div className="flex justify-center items-center h-full">
             <h1 className="text-2xl font-bold text-gray-500">No Jobs Found</h1>

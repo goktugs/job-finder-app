@@ -10,11 +10,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import Loading from "@/components/ui/loading";
+import LoadingSpinner from "../../components/ui/loadingSpinner";
+import { useToast } from "@/components/ui/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import * as z from "zod";
 
 const LoginSchema = z.object({
@@ -23,6 +24,7 @@ const LoginSchema = z.object({
 });
 
 export default function Login() {
+  const { toast } = useToast();
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
@@ -30,6 +32,8 @@ export default function Login() {
       password: "",
     },
   });
+
+  const navigate = useNavigate();
 
   const { mutate, isLoading } = useMutation(
     (data: z.infer<typeof LoginSchema>) =>
@@ -39,11 +43,31 @@ export default function Login() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
-      }).then((res) => res.json()),
+      })
+        .then((res) => {
+          if (!res.ok) {
+            return res.text().then((text) => {
+              throw new Error(text);
+            });
+          }
+          return res.json();
+        })
+        .catch((err) => {
+          console.log("caught it!", err);
+        }),
     {
       onSuccess: (data) => {
-        localStorage.setItem("token", JSON.stringify(data.accessToken));
-        localStorage.setItem("user", JSON.stringify(data.refreshToken));
+        localStorage.setItem("accessToken", JSON.stringify(data.accessToken));
+        localStorage.setItem("refreshToken", JSON.stringify(data.refreshToken));
+        localStorage.setItem("id", JSON.stringify(data.user.id));
+        navigate("/jobs");
+      },
+      onError: (err) => {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "User not found",
+        });
       },
     }
   );
@@ -55,7 +79,7 @@ export default function Login() {
   return (
     <div className="w-full flex flex-col justify-center text-white font-josefin-sans items-center h-full text-center space-y-12">
       {isLoading ? (
-        <Loading />
+        <LoadingSpinner />
       ) : (
         <>
           <div className="flex flex-col space-y-6">
