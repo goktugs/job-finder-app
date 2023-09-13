@@ -1,30 +1,29 @@
-import React from "react";
-
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { useLocationStore } from "@/store/locationSlice";
-import { AutoComplete } from "@/components/autoComplete";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { useFilterStore } from "@/store/filterSlice";
+import { Label } from "@radix-ui/react-label";
 
 export default function FilterDropdown() {
-  const locations = useLocationStore((state) => state.locations);
-
-  const filterByLocation = useFilterStore((state) => state.filterByLocation);
-  const setFilterByLocation = useFilterStore(
-    (state) => state.setFilterByLocation
-  );
-  const filterBySalary = useFilterStore((state) => state.filterBySalary);
-  const setFilterBySalary = useFilterStore((state) => state.setFilterBySalary);
+  const { searchType, setSearchType } = useFilterStore();
 
   return (
-    <div className="flex justify-center">
-      <Popover>
+    <div className="flex justify-center ">
+      {/* <Popover>
         <PopoverTrigger asChild>
           <Button variant="outline">Filter Options</Button>
         </PopoverTrigger>
@@ -35,41 +34,103 @@ export default function FilterDropdown() {
                 Filter By
               </h4>
               <p className="text-sm text-muted-foreground text-center">
-                You can filter by location and salary
+                You can filter by location, salary and company name
               </p>
             </div>
-            <div className="grid gap-2">
+            <div className="flex flex-col space-y-4">
               <div className="flex items-center gap-4">
-                <Label htmlFor="Location">Location</Label>
-                <AutoComplete
-                  options={locations.map((location, index) => ({
-                    label: location,
-                    value: index.toString(),
-                  }))}
-                  emptyMessage={"No location were found"}
+                <Label className="w-16" htmlFor="Location">
+                  Location
+                </Label>
+                <Input
+                  value={filterByLocation}
+                  onChange={(e) => setFilterByLocation(e.target.value)}
                 />
               </div>
+           
 
-              <div className="grid grid-cols-3 items-center gap-4 ">
-                <Label htmlFor="height">Salary</Label>
+              <div className="flex items-center gap-4">
+                <Label className="w-16" htmlFor="CompanyName">
+                  Company Name
+                </Label>
                 <Input
-                  id="min"
-                  placeholder="Min"
-                  className="col-span-1 h-8 text-xs placeholder:text-xs"
-                  type="number"
-                />
-                <Input
-                  id="max"
-                  placeholder="Max"
-                  className="col-span-1 h-8 text-xs placeholder:text-xs"
-                  type="number"
+                  value={filterByCompanyName}
+                  onChange={(e) => setFilterByCompany(e.target.value)}
                 />
               </div>
             </div>
-            <Button>Filter</Button>
+            <Button onClick={filterHandler}>Filter</Button>
           </div>
         </PopoverContent>
-      </Popover>
+      </Popover> */}
+
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="outline">Search By</Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuRadioGroup
+            value={searchType}
+            onValueChange={setSearchType}
+          >
+            <DropdownMenuRadioItem
+              className="hover:cursor-pointer"
+              value={"name"}
+            >
+              Position
+            </DropdownMenuRadioItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuRadioItem
+              className="hover:cursor-pointer"
+              value={"companyName"}
+            >
+              Company Name
+            </DropdownMenuRadioItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuRadioItem
+              className="hover:cursor-pointer"
+              value={"location"}
+            >
+              Location
+            </DropdownMenuRadioItem>
+          </DropdownMenuRadioGroup>
+          <DropdownMenuItem>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <div className="flex items-center gap-2 ">
+                    <Label
+                      className="w-16 text-left opacity-40"
+                      htmlFor="height"
+                    >
+                      Salary
+                    </Label>
+                    <div className="flex flex-1 space-x-2">
+                      <Input
+                        disabled
+                        id="min"
+                        placeholder="Min"
+                        className="col-span-1 h-8 text-xs placeholder:text-xs"
+                        type="number"
+                      />
+                      <Input
+                        disabled
+                        id="max"
+                        placeholder="Max"
+                        className="col-span-1 h-8 text-xs placeholder:text-xs"
+                        type="number"
+                      />
+                    </div>
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Salary Search not implemented to BE yet</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   );
 }

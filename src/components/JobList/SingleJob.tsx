@@ -48,7 +48,7 @@ export default function SingleJob(job: IJobs) {
         <div className="flex items-center justify-center mt-2">
           <CalendarIcon className="h-4 w-4 text-gray-600" />
           <span className="text-gray-600  ml-2">
-            Date {format(new Date(job?.createdAT), "dd/MM/yyyy")}
+            Date {format(new Date(job?.createdAt), "dd/MM/yyyy")}
           </span>
         </div>
       </div>
