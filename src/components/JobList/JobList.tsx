@@ -88,7 +88,7 @@ export default function JobList() {
                 }
               }}
               disabled={
-                isPreviousData || page === 10 || data?.data.length === 0
+                isPreviousData || page === 10 || data?.data?.length === 0
               }
             >
               <ArrowRightIcon />
@@ -107,13 +107,13 @@ export default function JobList() {
       >
         {isLoading || isFetching ? (
           <LoadingSpinner />
-        ) : data?.data.length === 0 ? (
+        ) : data?.data?.length === 0 ? (
           <div className="flex justify-center items-center h-full">
             <h1 className="text-2xl font-bold text-gray-500">No Jobs Found</h1>
           </div>
         ) : (
           <>
-            {data?.data.map((job: IJobs) => (
+            {data?.data?.map((job: IJobs) => (
               <SingleJob key={job.id} {...job} />
             ))}
           </>
