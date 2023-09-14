@@ -23,50 +23,16 @@ export default function FilterDropdown() {
 
   return (
     <div className="flex justify-center ">
-      {/* <Popover>
-        <PopoverTrigger asChild>
-          <Button variant="outline">Filter Options</Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-80">
-          <div className="grid gap-4">
-            <div className="space-y-2">
-              <h4 className="font-medium leading-none text-center">
-                Filter By
-              </h4>
-              <p className="text-sm text-muted-foreground text-center">
-                You can filter by location, salary and company name
-              </p>
-            </div>
-            <div className="flex flex-col space-y-4">
-              <div className="flex items-center gap-4">
-                <Label className="w-16" htmlFor="Location">
-                  Location
-                </Label>
-                <Input
-                  value={filterByLocation}
-                  onChange={(e) => setFilterByLocation(e.target.value)}
-                />
-              </div>
-           
-
-              <div className="flex items-center gap-4">
-                <Label className="w-16" htmlFor="CompanyName">
-                  Company Name
-                </Label>
-                <Input
-                  value={filterByCompanyName}
-                  onChange={(e) => setFilterByCompany(e.target.value)}
-                />
-              </div>
-            </div>
-            <Button onClick={filterHandler}>Filter</Button>
-          </div>
-        </PopoverContent>
-      </Popover> */}
-
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline">Search By</Button>
+          <Button variant="outline">
+            Search By{" "}
+            {searchType === "name"
+              ? "Position"
+              : searchType === "companyName"
+              ? "Company Name"
+              : "Location"}
+          </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuRadioGroup

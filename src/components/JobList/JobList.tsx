@@ -56,11 +56,12 @@ export default function JobList() {
     return res;
   };
 
-  const { isLoading, isError, error, data, isPreviousData } =
+  const { isLoading, isError, error, data, isPreviousData, isFetching } =
     useQuery<IJobsResponse>({
-      queryKey: ["jobs", page, debouncedFilterQuery, sortType],
+      queryKey: ["jobs", page, debouncedFilterQuery, sortType, searchType],
       queryFn: () => fetchJobs(),
       keepPreviousData: true,
+      refetchOnWindowFocus: false,
     });
 
   if (isError) {
@@ -86,8 +87,9 @@ export default function JobList() {
                   setPage((old) => old + 1);
                 }
               }}
-              // Disable the Next Page button until we know a next page is available
-              disabled={isPreviousData || page === 10}
+              disabled={
+                isPreviousData || page === 10 || data?.data.length === 0
+              }
             >
               <ArrowRightIcon />
             </Button>
@@ -103,7 +105,7 @@ export default function JobList() {
             : "grid grid-cols-2 gap-8 sm:grid-cols-3 md:grid-cols-4"
         )}
       >
-        {isLoading ? (
+        {isLoading || isFetching ? (
           <LoadingSpinner />
         ) : data?.data.length === 0 ? (
           <div className="flex justify-center items-center h-full">

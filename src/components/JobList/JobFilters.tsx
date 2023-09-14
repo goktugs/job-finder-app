@@ -10,13 +10,20 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "../ui/button";
+import { useState } from "react";
 
 export default function JobFilters() {
   const { sortType, setSortType } = useSortStore();
+  const [open, setOpen] = useState(false);
 
   return (
     <div className="flex gap-2">
-      <DropdownMenu>
+      <DropdownMenu
+        onOpenChange={(open) => {
+          setOpen(open);
+        }}
+        open={open}
+      >
         <DropdownMenuTrigger asChild>
           <Button variant="outline">Sort By</Button>
         </DropdownMenuTrigger>
@@ -45,6 +52,7 @@ export default function JobFilters() {
             className="w-full mt-4"
             onClick={() => {
               setSortType("none");
+              setOpen(false);
             }}
           >
             Reset
