@@ -40,7 +40,7 @@ export default function Header() {
   return (
     <header className="flex justify-between px-6 py-4 items-center">
       <div
-        className="w-24 h-24 md:w-44 md:h-44 hover:cursor-pointer"
+        className="w-32 h-32 md:w-44 md:h-44 hover:cursor-pointer"
         onClick={() => navigate("/")}
       >
         <img src="/logo.png" alt="logo" />

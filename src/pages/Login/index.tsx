@@ -44,16 +44,36 @@ export default function Login() {
         },
         body: JSON.stringify(data),
       })
-        .then((res) => {
-          if (!res.ok) {
-            return res.text().then((text) => {
-              throw new Error(text);
-            });
+        .then((response) => {
+          if (!response.ok) {
+            return Promise.reject(response);
           }
-          return res.json();
+          return response.json();
         })
-        .catch((err) => {
-          console.log("caught it!", err);
+        .catch((error) => {
+          if (typeof error.json === "function") {
+            error
+              .json()
+              .then((jsonError: any) => {
+                console.log("Json error from API");
+                toast({
+                  variant: "destructive",
+                  title: "Error",
+                  description: jsonError.message,
+                });
+              })
+              .catch(() => {
+                console.log("Generic error from API");
+                toast({
+                  variant: "destructive",
+                  title: "Error",
+                  description: error.statusText,
+                });
+              });
+          } else {
+            console.log("Fetch error");
+            console.log(error);
+          }
         }),
     {
       onSuccess: (data) => {
@@ -61,13 +81,6 @@ export default function Login() {
         localStorage.setItem("refreshToken", JSON.stringify(data.refreshToken));
         localStorage.setItem("id", JSON.stringify(data.user.id));
         navigate("/jobs");
-      },
-      onError: () => {
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: "User not found",
-        });
       },
     }
   );
