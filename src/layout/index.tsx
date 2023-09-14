@@ -5,12 +5,14 @@ import Main from "./Main";
 
 export default function Layout() {
   return (
-    <div className="container h-screen flex flex-col">
-      <Header />
-      <Main>
-        <Outlet />
-      </Main>
+    <>
+      <div className="container w-full flex flex-col mb-12">
+        <Header />
+        <Main>
+          <Outlet />
+        </Main>
+      </div>
       <Footer />
-    </div>
+    </>
   );
 }
