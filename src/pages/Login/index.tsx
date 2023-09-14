@@ -62,7 +62,7 @@ export default function Login() {
         localStorage.setItem("id", JSON.stringify(data.user.id));
         navigate("/jobs");
       },
-      onError: (err) => {
+      onError: () => {
         toast({
           variant: "destructive",
           title: "Error",
