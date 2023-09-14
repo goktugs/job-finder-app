@@ -45,7 +45,7 @@ export default function SuccessMessage() {
       </p>
       <RoughNotation show={true} type={"underline"} color="#f00">
         <h3 className="text-2xl font-semibold text-white md:text-3xl">
-          You ll be redirected to the login page in 5 seconds
+          You ll be redirected to the jobs page in 5 seconds
         </h3>
       </RoughNotation>
     </motion.section>

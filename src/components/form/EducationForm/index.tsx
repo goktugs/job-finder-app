@@ -13,6 +13,7 @@ import {
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { Switch } from "@/components/ui/switch";
 
 type StepProps = AllFormValues & {
   updateForm: (fieldToUpdate: Partial<AllFormValues>) => void;
@@ -21,6 +22,7 @@ type StepProps = AllFormValues & {
 export default function EducationForm({
   education,
   languages,
+  isEmployer,
   updateForm,
 }: StepProps) {
   const [startDate, setStartDate] = useState<Date | undefined>(new Date());
@@ -32,6 +34,18 @@ export default function EducationForm({
       description="Please provide education and languages proficiency."
     >
       <div className="w-full flex flex-col gap-5">
+        <div className="flex items-center text-white justify-center space-x-4">
+          <span className={!isEmployer ? "font-bold" : "opacity-40"}>
+            Employee
+          </span>
+          <Switch
+            checked={isEmployer}
+            onCheckedChange={(checked) => updateForm({ isEmployer: checked })}
+          />
+          <span className={isEmployer ? "font-bold" : "opacity-40"}>
+            Employer
+          </span>
+        </div>
         <div className="flex flex-col gap-2">
           <Label className="text-white" htmlFor="Education">
             Education
