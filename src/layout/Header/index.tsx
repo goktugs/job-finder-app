@@ -4,7 +4,7 @@
 
 import { useState } from "react";
 import { useQuery } from "react-query";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { IUser } from "@/types/types";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 
 export default function Header() {
   const [isNavOpen, setIsNavOpen] = useState(false);
+  const navigate = useNavigate();
 
   const isLoggedIn = localStorage.getItem("accessToken");
 
@@ -38,7 +39,12 @@ export default function Header() {
 
   return (
     <header className="flex justify-between px-6 py-4 items-center">
-      <div className="text-6xl text-red-900">Logo</div>
+      <div
+        className="w-24 h-24 md:w-44 md:h-44 hover:cursor-pointer"
+        onClick={() => navigate("/")}
+      >
+        <img src="/logo.png" alt="logo" />
+      </div>
 
       <div className="flex items-center justify-between  ">
         <nav>
