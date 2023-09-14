@@ -1,15 +1,11 @@
 import { create } from "zustand";
 
 type SortState = {
-  sortByDate: string;
-  setSortByDate: (sortByDate: string) => void;
-  sortBySalary: string;
-  setSortBySalary: (sortBySalary: string) => void;
+  sortType: string;
+  setSortType: (sortType: string) => void;
 };
 
 export const useSortStore = create<SortState>((set) => ({
-  sortByDate: "",
-  setSortByDate: (sortByDate: string) => set({ sortByDate }),
-  sortBySalary: "",
-  setSortBySalary: (sortBySalary: string) => set({ sortBySalary }),
+  sortType: "none",
+  setSortType: (sortType: string) => set({ sortType }),
 }));

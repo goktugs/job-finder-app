@@ -1,4 +1,5 @@
 // fixme error yok
+// fixme react hook form eklenmeli
 
 import { useMultiplestepForm } from "@/hooks/useMultipleStepForm";
 import React, { useState } from "react";
@@ -11,24 +12,24 @@ import PersonalInfoForm from "@/components/form/PersonalInfoForm";
 import SkillsExpForm from "@/components/form/SkillsExpForm";
 import EducationForm from "@/components/form/EducationForm";
 import { useMutation } from "react-query";
-import CryptoJS from "crypto-js";
+import { format } from "date-fns";
 
 interface UserInfoForm {
-  name: string;
-  surname: string;
   email: string;
   password: string;
-  isEmployer: boolean;
 }
 
 interface PersonalInfoForm {
+  name: string;
+  surname: string;
+  dateOfBirth: string;
   phone: string;
   address: {
     details: string;
     city: string;
     country: string;
   };
-  profile: string;
+  profileImage: string;
 }
 
 interface SkillsExpForm {
@@ -42,6 +43,7 @@ interface SkillsExpForm {
 }
 
 interface EducationForm {
+  isEmployer: boolean;
   education: {
     institution: string;
     degree: string;
@@ -64,6 +66,7 @@ const initialValues: AllFormValues = {
   surname: "",
   email: "",
   password: "",
+  dateOfBirth: format(new Date(), "yyyy-MM-dd"),
   isEmployer: false,
   phone: "",
   address: {
@@ -71,22 +74,22 @@ const initialValues: AllFormValues = {
     city: "",
     country: "",
   },
-  profile: "",
+  profileImage: "",
   skills: [],
   experience: [
     {
       company: "",
       position: "",
-      startDate: "",
-      endDate: "",
+      startDate: format(new Date(), "yyyy-MM-dd"),
+      endDate: format(new Date(), "yyyy-MM-dd"),
     },
   ],
   education: [
     {
       institution: "",
       degree: "",
-      startDate: "",
-      endDate: "",
+      startDate: format(new Date(), "yyyy-MM-dd"),
+      endDate: format(new Date(), "yyyy-MM-dd"),
     },
   ],
   languages: [
@@ -97,18 +100,8 @@ const initialValues: AllFormValues = {
   ],
 };
 
-function encryptPassword(
-  password: string | CryptoJS.lib.WordArray,
-  key: string | CryptoJS.lib.WordArray
-) {
-  const encrypted = CryptoJS.AES.encrypt(password, key).toString();
-  return encrypted;
-}
-
 export default function Signup() {
   const [formData, setFormData] = useState(initialValues);
-
-  console.log(formData);
 
   const {
     previousStep,
@@ -123,45 +116,50 @@ export default function Signup() {
   function updateForm(fieldToUpdate: Partial<UserInfoForm>) {
     setFormData({ ...formData, ...fieldToUpdate });
   }
-  // fixme needs rewrite
-  const createUser = async (formData: AllFormValues) => {
-    await fetch(`${import.meta.env.VITE_API_URL}/users`, {
-      method: "POST",
+
+  const { mutate } = useMutation((data: AllFormValues) =>
+    fetch(`${import.meta.env.VITE_API_URL}/user`, {
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        accept: "application/json",
+        Authorization: `Bearer ${localStorage
+          .getItem("accessToken")
+          ?.replace(/"/g, "")}`,
       },
-      body: JSON.stringify(formData),
-    }).then((res) => {
-      if (res.ok) {
-        console.log(res);
-        const passwordFromServer = formData.password;
-        const encryptionKey = import.meta.env.VITE_SUPER_SECRET_KEY;
-
-        if (passwordFromServer) {
-          const encryptedPassword = encryptPassword(
-            passwordFromServer,
-            encryptionKey
-          );
-          console.log("burdayım3", encryptedPassword);
-          localStorage.setItem("encryptedPassword", encryptedPassword);
-        }
-        localStorage.setItem("id", formData.surname);
-      } else {
-        console.log("error");
-      }
-    });
-  };
-
-  const { mutate, isLoading } = useMutation(createUser);
+      body: JSON.stringify(data),
+    }).then((res) => res.json())
+  );
 
   const handleOnSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    nextStep();
-    if (isLastStep && !isLoading) {
-      console.log("başarılı");
+    if (currentStepIndex === 0) {
+      fetch(`${import.meta.env.VITE_API_URL}/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          localStorage.setItem("accessToken", JSON.stringify(data.accessToken));
+          localStorage.setItem(
+            "refreshToken",
+            JSON.stringify(data.refreshToken)
+          );
+          localStorage.setItem("id", JSON.stringify(data.user.id));
+        });
+    }
+
+    if (isLastStep) {
       mutate(formData);
     }
+    nextStep();
   };
 
   return (

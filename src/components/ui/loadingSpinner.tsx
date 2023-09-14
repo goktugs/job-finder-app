@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function Loading() {
+export default function LoadingSpinner() {
   return (
     <div className="flex justify-center items-center mt-24 ">
       <div className="relative w-12 h-12 animate-spin rounded-full bg-gradient-to-r from-purple-400 via-blue-500 to-red-400 ">
