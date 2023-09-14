@@ -50,9 +50,14 @@ The platform should allow show job listings and allow users to apply for jobs.
 
 ### Screenshot
 
-![https://prnt.sc/YVBWKQOJcJJs](https://prnt.sc/YVBWKQOJcJJs)
-![https://prnt.sc/ogn0aLodlbRM](https://prnt.sc/ogn0aLodlbRM)
-![https://prnt.sc/M1tT8CqW29PE](https://prnt.sc/M1tT8CqW29PE)
+![image](https://github.com/goktugs/shft-job-finder-app/assets/86847572/b443db93-1e25-4fc1-9a3f-7cab451771bd)
+
+![image](https://github.com/goktugs/shft-job-finder-app/assets/86847572/20209b5c-f93d-4015-a4a1-c45981ae99d5)
+
+![image](https://github.com/goktugs/shft-job-finder-app/assets/86847572/cf3d2c8e-282f-4eb7-abd4-db374e5d7932)
+
+![image](https://github.com/goktugs/shft-job-finder-app/assets/86847572/a8ef1865-b49e-43aa-a75e-63d76a58d4d9)
+
 
 ### Links
 
