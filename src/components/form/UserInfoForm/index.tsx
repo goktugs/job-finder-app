@@ -5,19 +5,11 @@ import { Label } from "@/components/ui/label";
 import { AllFormValues } from "@/pages/Signup";
 import { useState } from "react";
 import { Toggle } from "@/components/ui/toggle";
-import { Switch } from "@/components/ui/switch";
 
 type StepProps = AllFormValues & {
   updateForm: (fieldToUpdate: Partial<AllFormValues>) => void;
 };
-export default function UserInfo({
-  name,
-  surname,
-  email,
-  password,
-  isEmployer,
-  updateForm,
-}: StepProps) {
+export default function UserInfo({ email, password, updateForm }: StepProps) {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
@@ -26,46 +18,6 @@ export default function UserInfo({
       description="Please provide your name, email address, surname and password."
     >
       <div className="w-full flex flex-col gap-5">
-        <div className="flex items-center text-white justify-center space-x-4">
-          <span>Employee</span>
-          <Switch
-            checked={isEmployer}
-            onCheckedChange={(checked) => updateForm({ isEmployer: checked })}
-          />
-          <span>Employer</span>
-        </div>
-        <div className="flex flex-col gap-2">
-          <Label className="text-white" htmlFor="name">
-            Name
-          </Label>
-          <Input
-            autoFocus
-            type="text"
-            name="name"
-            id="name"
-            placeholder="e.g. Stephen"
-            value={name}
-            onChange={(e) => updateForm({ name: e.target.value })}
-            className="w-full text-white"
-            required
-          />
-        </div>
-        <div className="flex flex-col gap-2">
-          <Label className="text-white" htmlFor="surname">
-            Surname
-          </Label>
-          <Input
-            autoFocus
-            type="text"
-            name="surname"
-            id="surname"
-            placeholder="e.g. King"
-            value={surname}
-            onChange={(e) => updateForm({ surname: e.target.value })}
-            className="w-full text-white"
-            required
-          />
-        </div>
         <div className="flex flex-col gap-2">
           <Label className="text-white" htmlFor="email">
             Email Address
