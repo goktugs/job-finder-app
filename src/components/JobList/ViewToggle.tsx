@@ -1,4 +1,3 @@
-import React from "react";
 import { Toggle } from "../ui/toggle";
 import { WidthIcon } from "@radix-ui/react-icons";
 import { useListTypeStore } from "@/store/listTypeSlice";
