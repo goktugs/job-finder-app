@@ -1,4 +1,5 @@
 // fixme filterQuery should stay on url
+// fixme change lang position
 
 import { Input } from "../ui/input";
 import { useFilterStore } from "@/store/filterSlice";
