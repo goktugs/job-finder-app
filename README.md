@@ -32,6 +32,10 @@ Copy `.env.example` to `.env`.
 ## Start 
 
     $ yarn dev
+    
+## To Run Tests
+
+    $ yarn build
 
 ## Simple build for production
 
@@ -46,9 +50,9 @@ The platform should allow show job listings and allow users to apply for jobs.
 
 ### Screenshot
 
-![](https://prnt.sc/YVBWKQOJcJJs)
-![](https://prnt.sc/ogn0aLodlbRM)
-![](https://prnt.sc/M1tT8CqW29PE)
+![https://prnt.sc/YVBWKQOJcJJs](https://prnt.sc/YVBWKQOJcJJs)
+![https://prnt.sc/ogn0aLodlbRM](https://prnt.sc/ogn0aLodlbRM)
+![https://prnt.sc/M1tT8CqW29PE](https://prnt.sc/M1tT8CqW29PE)
 
 ### Links
 
@@ -63,6 +67,7 @@ The platform should allow show job listings and allow users to apply for jobs.
 - Tanstack Query
 - React Hook Form
 - React Router Dom
+- i18Next
 - Tailwind
 - Shadcn
 - Mobile-first workflow
