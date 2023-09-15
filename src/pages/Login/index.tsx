@@ -105,8 +105,7 @@ export default function Login() {
                     </FormControl>
                     <FormMessage
                       className="text-white text-sm font-semibold 
-                  animate-[bounce_3s_ease-in-out_infinite]
-                "
+                  animate-[bounce_3s_ease-in-out_infinite]"
                     />
                   </FormItem>
                 )}
