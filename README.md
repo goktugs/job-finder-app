@@ -1,27 +1,88 @@
-# React + TypeScript + Vite
+# Lincatin Job Finder App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Project description
+This is a task assignment for FE position at SHFT. 
 
-Currently, two official plugins are available:
+## Table of contents
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- [Overview](#overview)
+  - [Requirements](#Requirements)
+  - [Install](#Install)
+  - [Links](#links)
+  - [Built with](#built-with)
+- [Author](#author)
+- [Acknowledgments](#acknowledgments)
 
-## Expanding the ESLint configuration
+## Overview
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+### Requirements
 
-- Configure the top-level `parserOptions` property like this:
+For development, you will need Node.js installed on your environement.
+    
+## Install
 
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
-```
+    $ git clone https://github.com/ORG/PROJECT.git
+    $ cd PROJECT
+    $ yarn
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+### Configure app
+
+Copy `.env.example` to `.env`.
+
+## Start 
+
+    $ yarn dev
+    
+## To Run Tests
+
+    $ yarn build
+
+## Simple build for production
+
+    $ yarn build
+
+---
+
+### The challenge
+
+- Challenge is create a web-based job application platform using React.
+The platform should allow show job listings and allow users to apply for jobs.
+
+### Screenshot
+
+![image](https://github.com/goktugs/shft-job-finder-app/assets/86847572/b443db93-1e25-4fc1-9a3f-7cab451771bd)
+
+![image](https://github.com/goktugs/shft-job-finder-app/assets/86847572/20209b5c-f93d-4015-a4a1-c45981ae99d5)
+
+![image](https://github.com/goktugs/shft-job-finder-app/assets/86847572/cf3d2c8e-282f-4eb7-abd4-db374e5d7932)
+
+![image](https://github.com/goktugs/shft-job-finder-app/assets/86847572/a8ef1865-b49e-43aa-a75e-63d76a58d4d9)
+
+
+### Links
+
+- Live Site URL: [https://shft-job-finder-app.vercel.app/](https://shft-job-finder-app.vercel.app/)
+- Development URL: [shft-job-finder-ly9jjnnmf-goktugs.vercel.app](shft-job-finder-ly9jjnnmf-goktugs.vercel.app)
+
+## My process
+
+### Built with
+
+- [React](https://reactjs.org/) - JS library
+- Tanstack Query
+- React Hook Form
+- React Router Dom
+- i18Next
+- Tailwind
+- Shadcn
+- Mobile-first workflow
+
+## Author
+
+- Twitter - [@g0ktugs](https://www.twitter.com/g0ktugs)
+
+## Acknowledgments
+
+This is where you can give a hat tip to anyone who helped you out on this project. Perhaps you worked in a team or got some inspiration from someone else's solution. This is the perfect place to give them some credit.
+
+**Note: Delete this note and edit this section's content as necessary. If you completed this challenge by yourself, feel free to delete this section entirely.**
