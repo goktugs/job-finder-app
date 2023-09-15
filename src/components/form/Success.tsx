@@ -3,6 +3,7 @@ import successIcon from "../../assets/success.png";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { RoughNotation } from "react-rough-notation";
+import { useTranslation } from "react-i18next";
 
 const successVariants = {
   hidden: {
@@ -22,6 +23,8 @@ const successVariants = {
 export default function SuccessMessage() {
   const navigate = useNavigate();
 
+  const { t } = useTranslation();
+
   useEffect(() => {
     setTimeout(() => {
       navigate("/jobs");
@@ -37,15 +40,14 @@ export default function SuccessMessage() {
     >
       <img src={successIcon} alt="Success Icon" className="md:mb-4 w-36 h-36" />
       <h4 className="text-2xl font-semibold text-white md:text-3xl">
-        Thank you!
+        {t("thankYou")}
       </h4>
       <p className="text-sm max-w-md text-neutral-300 md:text-base">
-        Thanks for the time you spent filling out the form. Now you can sign in
-        and start using our services.
+        {t("regSuccess")}
       </p>
       <RoughNotation show={true} type={"underline"} color="#f00">
         <h3 className="text-2xl font-semibold text-white md:text-3xl">
-          You ll be redirected to the jobs page in 5 seconds
+          {t("regSuccess2")}
         </h3>
       </RoughNotation>
     </motion.section>

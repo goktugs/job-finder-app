@@ -14,6 +14,7 @@ import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { Switch } from "@/components/ui/switch";
+import { useTranslation } from "react-i18next";
 
 type StepProps = AllFormValues & {
   updateForm: (fieldToUpdate: Partial<AllFormValues>) => void;
@@ -27,6 +28,7 @@ export default function EducationForm({
 }: StepProps) {
   const [startDate, setStartDate] = useState<Date | undefined>(new Date());
   const [endDate, setEndDate] = useState<Date | undefined>(new Date());
+  const { t } = useTranslation();
 
   return (
     <FormWrapper
@@ -36,19 +38,19 @@ export default function EducationForm({
       <div className="w-full flex flex-col gap-5">
         <div className="flex items-center text-white justify-center space-x-4">
           <span className={!isEmployer ? "font-bold" : "opacity-40"}>
-            Employee
+            {t("employee")}
           </span>
           <Switch
             checked={isEmployer}
             onCheckedChange={(checked) => updateForm({ isEmployer: checked })}
           />
           <span className={isEmployer ? "font-bold" : "opacity-40"}>
-            Employer
+            {t("employer")}
           </span>
         </div>
         <div className="flex flex-col gap-2">
           <Label className="text-white" htmlFor="Education">
-            Education
+            {t("education")}
           </Label>
           <Input
             autoFocus
@@ -175,7 +177,7 @@ export default function EducationForm({
         </div>
         <div className="flex flex-col gap-2">
           <Label className="text-white" htmlFor="languages">
-            Languages
+            {t("language")}
           </Label>
           <Input
             autoFocus

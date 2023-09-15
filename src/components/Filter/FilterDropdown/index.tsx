@@ -17,9 +17,12 @@ import {
 } from "@/components/ui/tooltip";
 import { useFilterStore } from "@/store/filterSlice";
 import { Label } from "@radix-ui/react-label";
+import { useTranslation } from "react-i18next";
 
 export default function FilterDropdown() {
   const { searchType, setSearchType } = useFilterStore();
+
+  const { t } = useTranslation();
 
   return (
     <div className="flex justify-center ">
@@ -28,10 +31,10 @@ export default function FilterDropdown() {
           <Button variant="outline">
             Search By{" "}
             {searchType === "name"
-              ? "Position"
+              ? t("position")
               : searchType === "companyName"
-              ? "Company Name"
-              : "Location"}
+              ? t("company")
+              : t("location")}
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
@@ -43,21 +46,21 @@ export default function FilterDropdown() {
               className="hover:cursor-pointer"
               value={"name"}
             >
-              Position
+              {t("position")}
             </DropdownMenuRadioItem>
             <DropdownMenuSeparator />
             <DropdownMenuRadioItem
               className="hover:cursor-pointer"
               value={"companyName"}
             >
-              Company Name
+              {t("company")}
             </DropdownMenuRadioItem>
             <DropdownMenuSeparator />
             <DropdownMenuRadioItem
               className="hover:cursor-pointer"
               value={"location"}
             >
-              Location
+              {t("location")}
             </DropdownMenuRadioItem>
           </DropdownMenuRadioGroup>
           <DropdownMenuItem>
@@ -69,7 +72,7 @@ export default function FilterDropdown() {
                       className="w-16 text-left opacity-40"
                       htmlFor="height"
                     >
-                      Salary
+                      {t("salary")}
                     </Label>
                     <div className="flex flex-1 space-x-2">
                       <Input
