@@ -29,7 +29,7 @@ export default function FilterDropdown() {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="outline">
-            Search By{" "}
+            {t("searchBy")}
             {searchType === "name"
               ? t("position")
               : searchType === "companyName"
