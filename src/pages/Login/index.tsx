@@ -1,6 +1,11 @@
 // fixme dönen hata mesajlarını göster. axios kurulmalı
+// fixme toast positon
+//  fixme hata yanlış
 
 import { Button } from "@/components/ui/button";
+import axios from "axios";
+import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
+
 import {
   Form,
   FormField,
@@ -17,6 +22,8 @@ import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
 import { Link, useNavigate } from "react-router-dom";
 import * as z from "zod";
+import { useState } from "react";
+import { Toggle } from "@/components/ui/toggle";
 
 const LoginSchema = z.object({
   email: z.string().email(),
@@ -37,24 +44,9 @@ export default function Login() {
 
   const { mutate, isLoading } = useMutation(
     (data: z.infer<typeof LoginSchema>) =>
-      fetch(`${import.meta.env.VITE_API_URL}/login `, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      })
-        .then((res) => {
-          if (!res.ok) {
-            return res.text().then((text) => {
-              throw new Error(text);
-            });
-          }
-          return res.json();
-        })
-        .catch((err) => {
-          console.log("caught it!", err);
-        }),
+      axios
+        .post(`${import.meta.env.VITE_API_URL}/login`, data)
+        .then((res) => res.data),
     {
       onSuccess: (data) => {
         localStorage.setItem("accessToken", JSON.stringify(data.accessToken));
@@ -75,6 +67,8 @@ export default function Login() {
   const onSubmit = (data: z.infer<typeof LoginSchema>) => {
     mutate(data);
   };
+
+  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <div className="w-full flex flex-col justify-center text-white font-josefin-sans items-center h-full text-center space-y-12">
@@ -126,7 +120,25 @@ export default function Login() {
                       Password
                     </FormLabel>
                     <FormControl>
-                      <Input placeholder="Password" {...field} />
+                      <div className="flex space-x-1">
+                        <Input
+                          placeholder="Password"
+                          type={showPassword ? "text" : "password"}
+                          {...field}
+                        />
+                        <Toggle
+                          pressed={showPassword}
+                          onPressedChange={() => setShowPassword(!showPassword)}
+                          size="sm"
+                          aria-label="Toggle italic"
+                        >
+                          {showPassword ? (
+                            <EyeClosedIcon className="h-8 w-8 bg-gray-600 p-1 rounded-lg" />
+                          ) : (
+                            <EyeOpenIcon className="h-8 w-8 bg-gray-600 p-1 rounded-lg" />
+                          )}
+                        </Toggle>
+                      </div>
                     </FormControl>
                     <FormMessage
                       className="text-white text-sm font-semibold 
