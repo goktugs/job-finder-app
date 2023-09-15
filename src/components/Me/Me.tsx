@@ -16,11 +16,13 @@ import EditMeForm from "./EditMe";
 import { useState } from "react";
 import { useMeSlice } from "@/store/meSlice";
 import { format } from "date-fns";
+import { useToast } from "../ui/use-toast";
 
 export default function Me() {
   const navigate = useNavigate();
   const [isEditOpen, setIsEditOpen] = useState<boolean>(false);
   const refetchMe = useMeSlice((state) => state.refetchMe);
+  const { toast } = useToast();
 
   const fetchMeUser = async () => {
     try {
@@ -33,7 +35,11 @@ export default function Me() {
       });
       return response.data;
     } catch (err) {
-      console.log(err);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Something went wrong",
+      });
     }
   };
 
