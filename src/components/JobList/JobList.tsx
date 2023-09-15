@@ -18,6 +18,8 @@ import ViewToggle from "./ViewToggle";
 import { ArrowLeftIcon, ArrowRightIcon } from "@radix-ui/react-icons";
 import useDebounce from "@/hooks/useDebounce";
 import Me from "../Me/Me";
+import axios from "axios";
+import { useToast } from "../ui/use-toast";
 
 export default function JobList() {
   const [page, setPage] = useState(1);
@@ -25,6 +27,7 @@ export default function JobList() {
   const debouncedFilterQuery = useDebounce(query, 800);
   const { sortType } = useSortStore();
   const listType = useListTypeStore((state) => state.listType);
+  const { toast } = useToast();
 
   const { searchType } = useFilterStore();
 
@@ -46,15 +49,25 @@ export default function JobList() {
   }
 
   const fetchJobs = async () => {
-    const res = await fetch(url, {
-      headers: {
-        accept: "application/json",
-        Authorization: `Bearer ${localStorage
-          .getItem("accessToken")
-          ?.replace(/"/g, "")}`,
-      },
-    }).then((res) => res.json());
-    return res;
+    try {
+      const response = await axios.get(url, {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${localStorage
+            .getItem("accessToken")
+            ?.replace(/"/g, "")}`,
+        },
+      });
+
+      return response.data;
+    } catch (error) {
+      console.error("İşlem başarısız oldu:", error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Something went wrong!",
+      });
+    }
   };
 
   const { isLoading, isError, error, data, isPreviousData, isFetching } =
