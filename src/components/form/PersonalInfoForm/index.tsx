@@ -14,6 +14,7 @@ import { cn } from "@/lib/utils";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
+import { useTranslation } from "react-i18next";
 type stepProps = AllFormValues & {
   updateForm: (fieldToUpdate: Partial<AllFormValues>) => void;
 };
@@ -30,6 +31,8 @@ export default function PersonalInfoForm({
     Date | undefined
   >(new Date());
 
+  const { t } = useTranslation();
+
   return (
     <FormWrapper
       title="Personal info"
@@ -38,7 +41,7 @@ export default function PersonalInfoForm({
       <div className="w-full flex flex-col space-y-4 overflow-y-scroll h-96 md:h-80">
         <div className="flex flex-col gap-2">
           <Label className="text-white" htmlFor="name">
-            Name
+            {t("name")}
           </Label>
           <Input
             autoFocus
@@ -54,7 +57,7 @@ export default function PersonalInfoForm({
         </div>
         <div className="flex flex-col gap-2">
           <Label className="text-white" htmlFor="surname">
-            Surname
+            {t("surname")}
           </Label>
           <Input
             autoFocus
@@ -70,7 +73,7 @@ export default function PersonalInfoForm({
         </div>
         <div className="flex flex-col gap-2">
           <Label className="text-white" htmlFor="phone">
-            Phone
+            {t("phone")}
           </Label>
           <Input
             autoFocus
@@ -131,7 +134,7 @@ export default function PersonalInfoForm({
         </div>
         <div className="flex flex-col gap-2">
           <Label className="text-white" htmlFor="adress">
-            Enter your address
+            {t("enterYourAdd")}
           </Label>
           <Input
             autoFocus
@@ -179,7 +182,7 @@ export default function PersonalInfoForm({
         </div>
         <div className="flex flex-col gap-2">
           <Label className="text-white" htmlFor="profile">
-            Profile Picture
+            {t("profilePic")}
           </Label>
           <div className="flex ">
             <Input
@@ -202,7 +205,7 @@ export default function PersonalInfoForm({
               }
               className="text-white ml-2 text-center cursor-pointer"
             >
-              Get Rand Image
+              {t("getRandImg")}
             </span>
           </div>
         </div>

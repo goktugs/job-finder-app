@@ -5,12 +5,15 @@ import { Label } from "@/components/ui/label";
 import { AllFormValues } from "@/pages/Signup";
 import { useState } from "react";
 import { Toggle } from "@/components/ui/toggle";
+import { useTranslation } from "react-i18next";
 
 type StepProps = AllFormValues & {
   updateForm: (fieldToUpdate: Partial<AllFormValues>) => void;
 };
 export default function UserInfo({ email, password, updateForm }: StepProps) {
   const [showPassword, setShowPassword] = useState(false);
+
+  const { t } = useTranslation();
 
   return (
     <FormWrapper
@@ -20,7 +23,7 @@ export default function UserInfo({ email, password, updateForm }: StepProps) {
       <div className="w-full flex flex-col gap-5">
         <div className="flex flex-col gap-2">
           <Label className="text-white" htmlFor="email">
-            Email Address
+            {t("email")}
           </Label>
           <Input
             type="email"
@@ -35,7 +38,7 @@ export default function UserInfo({ email, password, updateForm }: StepProps) {
         </div>
         <div className="flex flex-col gap-2">
           <Label className="text-white" htmlFor="password">
-            Password
+            {t("password")}
           </Label>
           <div className="flex">
             <Input

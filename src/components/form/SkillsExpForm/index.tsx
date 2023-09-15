@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/popover";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
 
 type StepProps = AllFormValues & {
   updateForm: (fieldToUpdate: Partial<AllFormValues>) => void;
@@ -29,6 +30,8 @@ export default function SkillsExpForm({
   );
   const [endDate, setEndDate] = React.useState<Date | undefined>(new Date());
 
+  const { t } = useTranslation();
+
   return (
     <FormWrapper
       title="Skills and Experience"
@@ -37,7 +40,7 @@ export default function SkillsExpForm({
       <div className="w-full flex flex-col gap-5">
         <div className="flex flex-col gap-2">
           <Label className="text-white" htmlFor="skills">
-            Skills
+            {t("skills")}
           </Label>
           <Input
             autoFocus
@@ -53,7 +56,7 @@ export default function SkillsExpForm({
         </div>
         <div className="flex flex-col gap-2">
           <Label className="text-white" htmlFor="experience">
-            Experience
+            {t("experience")}
           </Label>
 
           <Input

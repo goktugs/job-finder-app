@@ -6,6 +6,7 @@ import Signup from "./pages/Signup";
 import Jobs from "./pages/Jobs";
 import NotFound from "./pages/NotFound";
 import { Toaster } from "@/components/ui/toaster";
+import "./i18n";
 
 function App() {
   return (
