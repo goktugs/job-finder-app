@@ -23,3 +23,37 @@ export interface IJobsResponse {
     perPage: number;
   };
 }
+
+export interface IProfile {
+  id: string;
+  name: string;
+  surname: string;
+  profileImage: string;
+  email: string;
+  phone: string;
+  address: {
+    country: string;
+    city: string;
+    details: string;
+  };
+  dateOfBirth: string;
+  education: {
+    institution: string;
+    degree: string;
+    startDate: string;
+    endDate: string;
+  }[];
+  experience: {
+    company: string;
+    position: string;
+    startDate: string;
+    endDate: string;
+  }[];
+  languages: {
+    language: string;
+    level: string;
+  }[];
+  skills: string[];
+  isEmployer: boolean;
+  appliedJobs: string[];
+}
