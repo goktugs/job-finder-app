@@ -15,6 +15,13 @@ export interface IUser {
   appliedJobs: string[];
 }
 
+export interface ILoginResponse {
+  accessToken: string;
+  tokenType: string;
+  refreshToken: string;
+  user: IUser;
+}
+
 export interface IJobsResponse {
   data: IJobs[];
   meta: {

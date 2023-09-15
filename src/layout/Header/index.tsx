@@ -1,16 +1,21 @@
 // fixme isloggedin lazım
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 
 export default function Header() {
   const [isNavOpen, setIsNavOpen] = useState(false);
   const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    setIsLoggedIn(!!token);
+  }, []);
   return (
     <header className="flex justify-between px-6 py-4 items-center">
       <div
-        className="w-24 h-24 md:w-44 md:h-44 hover:cursor-pointer"
+        className="w-32 h-32 md:w-44 md:h-44 hover:cursor-pointer"
         onClick={() => navigate("/")}
       >
         <img src="/logo.png" alt="logo" />
@@ -77,34 +82,36 @@ export default function Header() {
               </ul>
             </div>
           </section>
-          <div>
-            <ul className="DESKTOP-MENU hidden space-x-4 lg:flex">
-              <li className=" my-8 uppercase px-8 py-4 rounded-xl text-main-gray ">
-                <NavLink
-                  className={({ isActive }) =>
-                    isActive
-                      ? " font-bold border-b-2 bg-main-green px-8 py-2 border-main-purple hover:border-main-purple rounded-xl hover:border-b-2 transition duration-300 ease-in-out text-white"
-                      : "px-8 py-2"
-                  }
-                  to="/login"
-                >
-                  Login
-                </NavLink>
-              </li>
-              <li className=" my-8 uppercase px-8 py-4 rounded-xl text-main-gray ">
-                <NavLink
-                  className={({ isActive }) =>
-                    isActive
-                      ? " font-bold border-b-2 bg-main-green px-8 py-2 border-main-purple hover:border-main-purple rounded-xl hover:border-b-2 transition duration-300 ease-in-out text-white"
-                      : "px-8 py-2"
-                  }
-                  to="/signup"
-                >
-                  Sign Up
-                </NavLink>
-              </li>
-            </ul>
-          </div>
+          {!isLoggedIn && (
+            <div>
+              <ul className="DESKTOP-MENU hidden space-x-4 lg:flex">
+                <li className=" my-8 uppercase px-8 py-4 rounded-xl text-main-gray ">
+                  <NavLink
+                    className={({ isActive }) =>
+                      isActive
+                        ? " font-bold border-b-2 bg-main-green px-8 py-2 border-main-purple hover:border-main-purple rounded-xl hover:border-b-2 transition duration-300 ease-in-out text-white"
+                        : "px-8 py-2"
+                    }
+                    to="/login"
+                  >
+                    Login
+                  </NavLink>
+                </li>
+                <li className=" my-8 uppercase px-8 py-4 rounded-xl text-main-gray ">
+                  <NavLink
+                    className={({ isActive }) =>
+                      isActive
+                        ? " font-bold border-b-2 bg-main-green px-8 py-2 border-main-purple hover:border-main-purple rounded-xl hover:border-b-2 transition duration-300 ease-in-out text-white"
+                        : "px-8 py-2"
+                    }
+                    to="/signup"
+                  >
+                    Sign Up
+                  </NavLink>
+                </li>
+              </ul>
+            </div>
+          )}
         </nav>
         <style>{`
       .hideMenuNav {
