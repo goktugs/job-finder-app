@@ -3,10 +3,30 @@
 import { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
+
 export default function Header() {
+  const [lang, setLang] = useState("en");
+
+  const { i18n, t } = useTranslation();
+
   const [isNavOpen, setIsNavOpen] = useState(false);
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const changeLangHandler = async (lang: string) => {
+    await i18n.changeLanguage(lang);
+  };
 
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
@@ -20,6 +40,26 @@ export default function Header() {
       >
         <img src="/logo.png" alt="logo" />
       </div>
+
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="outline">{t("language")}</Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuLabel>{t("selectLang")}</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuRadioGroup
+            value={lang}
+            onValueChange={(value) => {
+              setLang(value);
+              changeLangHandler(value);
+            }}
+          >
+            <DropdownMenuRadioItem value="en">{t("en")}</DropdownMenuRadioItem>
+            <DropdownMenuRadioItem value="tr">{t("tr")}</DropdownMenuRadioItem>
+          </DropdownMenuRadioGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
 
       <div className="flex items-center justify-between  ">
         <nav>
