@@ -17,6 +17,7 @@ import JobFilters from "./JobFilters";
 import ViewToggle from "./ViewToggle";
 import { ArrowLeftIcon, ArrowRightIcon } from "@radix-ui/react-icons";
 import useDebounce from "@/hooks/useDebounce";
+import Me from "../Me/Me";
 
 export default function JobList() {
   const [page, setPage] = useState(1);
@@ -70,54 +71,61 @@ export default function JobList() {
 
   return (
     <>
-      <div className="flex justify-between">
-        <JobFilters />
-        <div className="flex space-x-4">
-          <div className="hidden md:flex md:items-center md:justify-center md:space-x-4">
-            <Button
-              onClick={() => setPage((old) => Math.max(old - 1, 0))}
-              disabled={page === 1}
-            >
-              <ArrowLeftIcon />
-            </Button>{" "}
-            <span>{page}/10</span>
-            <Button
-              onClick={() => {
-                if (!isPreviousData) {
-                  setPage((old) => old + 1);
-                }
-              }}
-              disabled={
-                isPreviousData || page === 10 || data?.data?.length === 0
-              }
-            >
-              <ArrowRightIcon />
-            </Button>
+      <div className="flex">
+        <div className="flex flex-col flex-1">
+          <div className="flex justify-between">
+            <JobFilters />
+            <div className="flex space-x-4">
+              <div className="hidden md:flex md:items-center md:justify-center md:space-x-4">
+                <Button
+                  onClick={() => setPage((old) => Math.max(old - 1, 0))}
+                  disabled={page === 1}
+                >
+                  <ArrowLeftIcon />
+                </Button>{" "}
+                <span>{page}/10</span>
+                <Button
+                  onClick={() => {
+                    if (!isPreviousData) {
+                      setPage((old) => old + 1);
+                    }
+                  }}
+                  disabled={
+                    isPreviousData || page === 10 || data?.data?.length === 0
+                  }
+                >
+                  <ArrowRightIcon />
+                </Button>
+              </div>
+              <ViewToggle />
+            </div>
           </div>
-          <ViewToggle />
+          <div
+            className={clsx(
+              "h-[75vh] max-h-[75vh] overflow-auto  pb-4 mt-2 ",
+              !listType
+                ? "flex flex-col space-y-4 md:space-y-8 md:px-4 md:pt-2 "
+                : "grid grid-cols-2 gap-8 sm:grid-cols-3 md:grid-cols-4"
+            )}
+          >
+            {isLoading || isFetching ? (
+              <LoadingSpinner />
+            ) : data?.data?.length === 0 ? (
+              <div className="flex justify-center items-center h-full">
+                <h1 className="text-2xl font-bold text-gray-500">
+                  No Jobs Found
+                </h1>
+              </div>
+            ) : (
+              <>
+                {data?.data?.map((job: IJobs) => (
+                  <SingleJob key={job.id} {...job} />
+                ))}
+              </>
+            )}
+          </div>
         </div>
-      </div>
-      <div
-        className={clsx(
-          "h-[75vh] max-h-[75vh] overflow-auto  pb-4 mt-2 ",
-          !listType
-            ? "flex flex-col space-y-4 md:space-y-8 md:px-4 md:pt-2 "
-            : "grid grid-cols-2 gap-8 sm:grid-cols-3 md:grid-cols-4"
-        )}
-      >
-        {isLoading || isFetching ? (
-          <LoadingSpinner />
-        ) : data?.data?.length === 0 ? (
-          <div className="flex justify-center items-center h-full">
-            <h1 className="text-2xl font-bold text-gray-500">No Jobs Found</h1>
-          </div>
-        ) : (
-          <>
-            {data?.data?.map((job: IJobs) => (
-              <SingleJob key={job.id} {...job} />
-            ))}
-          </>
-        )}
+        <Me />
       </div>
     </>
   );

@@ -1,6 +1,11 @@
 // fixme dönen hata mesajlarını göster. axios kurulmalı
+// fixme toast positon
+//  fixme hata yanlış
 
 import { Button } from "@/components/ui/button";
+import axios from "axios";
+import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
+
 import {
   Form,
   FormField,
@@ -17,6 +22,8 @@ import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
 import { Link, useNavigate } from "react-router-dom";
 import * as z from "zod";
+import { useState } from "react";
+import { Toggle } from "@/components/ui/toggle";
 
 const LoginSchema = z.object({
   email: z.string().email(),
@@ -37,44 +44,9 @@ export default function Login() {
 
   const { mutate, isLoading } = useMutation(
     (data: z.infer<typeof LoginSchema>) =>
-      fetch(`${import.meta.env.VITE_API_URL}/login `, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      })
-        .then((response) => {
-          if (!response.ok) {
-            return Promise.reject(response);
-          }
-          return response.json();
-        })
-        .catch((error) => {
-          if (typeof error.json === "function") {
-            error
-              .json()
-              .then((jsonError: any) => {
-                console.log("Json error from API");
-                toast({
-                  variant: "destructive",
-                  title: "Error",
-                  description: jsonError.message,
-                });
-              })
-              .catch(() => {
-                console.log("Generic error from API");
-                toast({
-                  variant: "destructive",
-                  title: "Error",
-                  description: error.statusText,
-                });
-              });
-          } else {
-            console.log("Fetch error");
-            console.log(error);
-          }
-        }),
+      axios
+        .post(`${import.meta.env.VITE_API_URL}/login`, data)
+        .then((res) => res.data),
     {
       onSuccess: (data) => {
         localStorage.setItem("accessToken", JSON.stringify(data.accessToken));
@@ -82,12 +54,21 @@ export default function Login() {
         localStorage.setItem("id", JSON.stringify(data.user.id));
         navigate("/jobs");
       },
+      onError: () => {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "User not found",
+        });
+      },
     }
   );
 
   const onSubmit = (data: z.infer<typeof LoginSchema>) => {
     mutate(data);
   };
+
+  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <div className="w-full flex flex-col justify-center text-white font-josefin-sans items-center h-full text-center space-y-12">
@@ -139,7 +120,25 @@ export default function Login() {
                       Password
                     </FormLabel>
                     <FormControl>
-                      <Input placeholder="Password" {...field} />
+                      <div className="flex space-x-1">
+                        <Input
+                          placeholder="Password"
+                          type={showPassword ? "text" : "password"}
+                          {...field}
+                        />
+                        <Toggle
+                          pressed={showPassword}
+                          onPressedChange={() => setShowPassword(!showPassword)}
+                          size="sm"
+                          aria-label="Toggle italic"
+                        >
+                          {showPassword ? (
+                            <EyeClosedIcon className="h-8 w-8 bg-gray-600 p-1 rounded-lg" />
+                          ) : (
+                            <EyeOpenIcon className="h-8 w-8 bg-gray-600 p-1 rounded-lg" />
+                          )}
+                        </Toggle>
+                      </div>
                     </FormControl>
                     <FormMessage
                       className="text-white text-sm font-semibold 
