@@ -18,7 +18,7 @@ export default function UserInfo({ email, password, updateForm }: StepProps) {
   return (
     <FormWrapper
       title="Site info"
-      description="Please provide your name, email address, surname and password."
+      description="Please provide email address and password."
     >
       <div className="w-full flex flex-col gap-5">
         <div className="flex flex-col gap-2">

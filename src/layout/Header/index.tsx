@@ -1,6 +1,4 @@
-// fixme isloggedin lazım
-
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 
 import {
@@ -14,6 +12,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
+import Me from "@/components/Me/Me";
+import { useLoggedInSlice } from "@/store/isLoggedIn";
 
 export default function Header() {
   const [lang, setLang] = useState("en");
@@ -22,16 +22,13 @@ export default function Header() {
 
   const [isNavOpen, setIsNavOpen] = useState(false);
   const navigate = useNavigate();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const changeLangHandler = async (lang: string) => {
     await i18n.changeLanguage(lang);
   };
 
-  useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-    setIsLoggedIn(!!token);
-  }, []);
+  const isLoggedIn = useLoggedInSlice((state) => state.isLoggedIn);
+
   return (
     <header className="flex justify-between px-6 py-4 items-center">
       <div
@@ -40,28 +37,33 @@ export default function Header() {
       >
         <img src="/logo.png" alt="logo" />
       </div>
+      <div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline">{t("language")}</Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuLabel>{t("selectLang")}</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuRadioGroup
+              value={lang}
+              onValueChange={(value) => {
+                setLang(value);
+                changeLangHandler(value);
+              }}
+            >
+              <DropdownMenuRadioItem value="en">
+                {t("en")}
+              </DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="tr">
+                {t("tr")}
+              </DropdownMenuRadioItem>
+            </DropdownMenuRadioGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
 
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="outline">{t("language")}</Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuLabel>{t("selectLang")}</DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuRadioGroup
-            value={lang}
-            onValueChange={(value) => {
-              setLang(value);
-              changeLangHandler(value);
-            }}
-          >
-            <DropdownMenuRadioItem value="en">{t("en")}</DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="tr">{t("tr")}</DropdownMenuRadioItem>
-          </DropdownMenuRadioGroup>
-        </DropdownMenuContent>
-      </DropdownMenu>
-
-      <div className="flex items-center justify-between  ">
+      <div className="flex items-center justify-between ml-auto  ">
         <nav>
           <section className="MOBILE-MENU flex lg:hidden">
             <div
@@ -75,83 +77,59 @@ export default function Header() {
 
             <div className={isNavOpen ? "showMenuNav" : "hideMenuNav"}>
               {" "}
-              <div
-                className="CROSS-ICON absolute top-0 right-0 px-8 py-8"
-                onClick={() => setIsNavOpen(false)}
-              >
-                <svg
-                  className="h-8 w-8 text-main-green"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <line x1="18" y1="6" x2="6" y2="18" />
-                  <line x1="6" y1="6" x2="18" y2="18" />
-                </svg>
-              </div>
-              <ul className="MENU-LINK-MOBILE-OPEN flex flex-col items-center justify-between min-h-[250px]">
-                <li className=" my-8 uppercase text-white   ">
-                  <NavLink
-                    className={({ isActive }) =>
-                      isActive
-                        ? "text-white  bg-main-green py-4 px-8 rounded-xl border-2 border-white  "
-                        : "animate-pulse"
-                    }
-                    to="/login"
+              {isLoggedIn ? (
+                <Me />
+              ) : (
+                <>
+                  <div
+                    className="CROSS-ICON absolute top-0 right-0 px-8 py-8"
                     onClick={() => setIsNavOpen(false)}
                   >
-                    Login
-                  </NavLink>
-                </li>
-                <li className=" my-8 uppercase text-white ">
-                  <NavLink
-                    className={({ isActive }) =>
-                      isActive
-                        ? "text-white bg-main-green py-4 px-8 rounded-xl font-bold border-4 border-white  "
-                        : "animate-pulse"
-                    }
-                    to="/signup"
-                    onClick={() => setIsNavOpen(false)}
-                  >
-                    Sign Up
-                  </NavLink>
-                </li>
-              </ul>
+                    <svg
+                      className="h-8 w-8 text-main-green"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <line x1="18" y1="6" x2="6" y2="18" />
+                      <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                  </div>
+                  <ul className="MENU-LINK-MOBILE-OPEN flex flex-col items-center justify-between min-h-[250px]">
+                    <li className=" my-8 uppercase text-white   ">
+                      <NavLink
+                        className={({ isActive }) =>
+                          isActive
+                            ? "text-white  bg-main-green py-4 px-8 rounded-xl border-2 border-white  "
+                            : "animate-pulse"
+                        }
+                        to="/login"
+                        onClick={() => setIsNavOpen(false)}
+                      >
+                        Login
+                      </NavLink>
+                    </li>
+                    <li className=" my-8 uppercase text-white ">
+                      <NavLink
+                        className={({ isActive }) =>
+                          isActive
+                            ? "text-white bg-main-green py-4 px-8 rounded-xl font-bold border-4 border-white  "
+                            : "animate-pulse"
+                        }
+                        to="/signup"
+                        onClick={() => setIsNavOpen(false)}
+                      >
+                        Sign Up
+                      </NavLink>
+                    </li>
+                  </ul>
+                </>
+              )}
             </div>
           </section>
-          {!isLoggedIn && (
-            <div>
-              <ul className="DESKTOP-MENU hidden space-x-4 lg:flex">
-                <li className=" my-8 uppercase px-8 py-4 rounded-xl text-main-gray ">
-                  <NavLink
-                    className={({ isActive }) =>
-                      isActive
-                        ? " font-bold border-b-2 bg-main-green px-8 py-2 border-main-purple hover:border-main-purple rounded-xl hover:border-b-2 transition duration-300 ease-in-out text-white"
-                        : "px-8 py-2"
-                    }
-                    to="/login"
-                  >
-                    Login
-                  </NavLink>
-                </li>
-                <li className=" my-8 uppercase px-8 py-4 rounded-xl text-main-gray ">
-                  <NavLink
-                    className={({ isActive }) =>
-                      isActive
-                        ? " font-bold border-b-2 bg-main-green px-8 py-2 border-main-purple hover:border-main-purple rounded-xl hover:border-b-2 transition duration-300 ease-in-out text-white"
-                        : "px-8 py-2"
-                    }
-                    to="/signup"
-                  >
-                    Sign Up
-                  </NavLink>
-                </li>
-              </ul>
-            </div>
-          )}
         </nav>
         <style>{`
       .hideMenuNav {

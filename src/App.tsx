@@ -5,7 +5,6 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Jobs from "./pages/Jobs";
 import NotFound from "./pages/NotFound";
-import { Toaster } from "@/components/ui/toaster";
 import "./i18n";
 
 function App() {
@@ -21,7 +20,6 @@ function App() {
         <Route path="/404" element={<NotFound />} />
         <Route path="*" element={<Navigate to="/404" replace />} />
       </Routes>
-      <Toaster />
     </>
   );
 }

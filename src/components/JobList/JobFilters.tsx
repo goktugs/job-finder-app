@@ -11,10 +11,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "../ui/button";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function JobFilters() {
   const { sortType, setSortType } = useSortStore();
   const [open, setOpen] = useState(false);
+
+  const { t } = useTranslation();
 
   return (
     <div className="flex gap-2">
@@ -25,7 +28,7 @@ export default function JobFilters() {
         open={open}
       >
         <DropdownMenuTrigger asChild>
-          <Button variant="outline">Sort By</Button>
+          <Button variant="outline">{t("sortBy")}</Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuSeparator />
@@ -33,19 +36,19 @@ export default function JobFilters() {
             <DropdownMenuLabel>Salary</DropdownMenuLabel>
 
             <DropdownMenuRadioItem value={"salary asc"}>
-              Ascending
+              {t("ascending")}
             </DropdownMenuRadioItem>
             <DropdownMenuRadioItem value={"salary desc"}>
-              Descending
+              {t("descending")}
             </DropdownMenuRadioItem>
             <DropdownMenuSeparator />
             <DropdownMenuLabel>Date</DropdownMenuLabel>
 
             <DropdownMenuRadioItem value={"createdAt asc"}>
-              Ascending
+              {t("ascending")}
             </DropdownMenuRadioItem>
             <DropdownMenuRadioItem value={"createdAt desc"}>
-              Descending
+              {t("descending")}
             </DropdownMenuRadioItem>
           </DropdownMenuRadioGroup>
           <Button
@@ -55,7 +58,7 @@ export default function JobFilters() {
               setOpen(false);
             }}
           >
-            Reset
+            {t("reset")}
           </Button>
         </DropdownMenuContent>
       </DropdownMenu>

@@ -13,6 +13,9 @@ import SkillsExpForm from "@/components/form/SkillsExpForm";
 import EducationForm from "@/components/form/EducationForm";
 import { useMutation } from "react-query";
 import { format } from "date-fns";
+import { useNavigate } from "react-router-dom";
+import { updateUserInfoFn, signUpUserFn } from "@/api/authApi";
+import { useToast } from "@/components/ui/use-toast";
 
 interface UserInfoForm {
   email: string;
@@ -102,6 +105,9 @@ const initialValues: AllFormValues = {
 
 export default function Signup() {
   const [formData, setFormData] = useState(initialValues);
+  const { toast } = useToast();
+
+  const navigate = useNavigate();
 
   const {
     previousStep,
@@ -117,43 +123,39 @@ export default function Signup() {
     setFormData({ ...formData, ...fieldToUpdate });
   }
 
-  const { mutate } = useMutation((data: AllFormValues) =>
-    fetch(`${import.meta.env.VITE_API_URL}/user`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        accept: "application/json",
-        Authorization: `Bearer ${localStorage
-          .getItem("accessToken")
-          ?.replace(/"/g, "")}`,
+  const { mutate } = useMutation(updateUserInfoFn, {
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
+  const { mutate: earlyLogin } = useMutation(
+    async (data: Pick<UserInfoForm, "email" | "password">) => {
+      const response = await signUpUserFn(data);
+      return response;
+    },
+    {
+      onSuccess: (data) => {
+        localStorage.setItem("accessToken", data.accessToken);
+        localStorage.setItem("refreshToken", data.refreshToken);
+        localStorage.setItem("userId", data.user.id);
       },
-      body: JSON.stringify(data),
-    }).then((res) => res.json())
+      onError: (error) => {
+        toast({
+          title: "Login Failed",
+          description: error.response.data.message + " Email already exists",
+          variant: "destructive",
+        });
+        goTo(0);
+      },
+    }
   );
 
   const handleOnSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (currentStepIndex === 0) {
-      fetch(`${import.meta.env.VITE_API_URL}/register`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password,
-        }),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          localStorage.setItem("accessToken", JSON.stringify(data.accessToken));
-          localStorage.setItem(
-            "refreshToken",
-            JSON.stringify(data.refreshToken)
-          );
-          localStorage.setItem("id", JSON.stringify(data.user.id));
-        });
+      earlyLogin({ email: formData.email, password: formData.password });
     }
 
     if (isLastStep) {
@@ -163,7 +165,10 @@ export default function Signup() {
   };
 
   return (
-    <div className="w-full flex justify-center items-center h-full">
+    <div className="w-full flex flex-col justify-center items-center h-full mt-32">
+      <div className={isFirstStep ? "" : "invisible"}>
+        <Button onClick={() => navigate("/login")}>Go Login</Button>
+      </div>
       <div
         className={`flex justify-between ${
           currentStepIndex === 1 ? "h-[600px] md:h-[500px]" : "h-[500px]"

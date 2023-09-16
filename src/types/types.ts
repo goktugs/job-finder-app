@@ -1,3 +1,22 @@
+export interface ILoginRequest {
+  email: string;
+  password: string;
+}
+
+export interface ILoginResponse {
+  accessToken: string;
+  tokenType: string;
+  refreshToken: string;
+  user: IUser;
+}
+
+export interface IUser {
+  id: string;
+  profileImage: string;
+  email: string;
+  appliedJobs: string[];
+}
+
 export interface IJobs {
   id: number;
   name: string;
@@ -6,13 +25,6 @@ export interface IJobs {
   salary: number;
   description: string;
   createdAt: string;
-}
-
-export interface IUser {
-  id: string;
-  profileImage: string;
-  email: string;
-  appliedJobs: string[];
 }
 
 export interface ILoginResponse {
@@ -31,8 +43,7 @@ export interface IJobsResponse {
   };
 }
 
-export interface IProfile {
-  id: string;
+export interface IUserUpdateRequest {
   name: string;
   surname: string;
   profileImage: string;
@@ -61,6 +72,11 @@ export interface IProfile {
     level: string;
   }[];
   skills: string[];
+}
+
+export interface IProfile {
+  IUserUpdateRequest: IUserUpdateRequest;
   isEmployer: boolean;
+  id: string;
   appliedJobs: string[];
 }

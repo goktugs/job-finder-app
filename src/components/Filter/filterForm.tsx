@@ -1,5 +1,4 @@
 // fixme filterQuery should stay on url
-// fixme change lang position
 
 import { Input } from "../ui/input";
 import { useFilterStore } from "@/store/filterSlice";
@@ -22,7 +21,7 @@ export default function FilterForm() {
     <div className=" flex flex-col md:flex-row space-y-4 md:space-y-0  md:space-x-4 items-center justify-center md:mb-8">
       <Input
         type="search"
-        placeholder={`${t("searchBy")} ${
+        placeholder={`${t("searchBy:")} ${
           searchType === "name"
             ? t("position")
             : searchType === "companyName"

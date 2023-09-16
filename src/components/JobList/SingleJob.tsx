@@ -19,39 +19,86 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "../ui/button";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { useToast } from "../ui/use-toast";
 import { useState } from "react";
-export default function SingleJob(job: IJobs) {
+export default function SingleJob({
+  job,
+  alreadyApplied,
+}: {
+  job: IJobs;
+  alreadyApplied: boolean;
+}) {
   const { toast } = useToast();
+
+  const queryClient = useQueryClient();
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const listType = useListTypeStore((state) => state.listType);
 
-  const { mutate } = useMutation((jobId: number) =>
-    fetch(`${import.meta.env.VITE_API_URL}/jobs/${jobId}/apply`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage
-          .getItem("accessToken")
-          ?.replace(/"/g, "")}`,
+  const { mutate } = useMutation(
+    (jobId: number) =>
+      fetch(`${import.meta.env.VITE_API_URL}/jobs/${jobId}/apply`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage
+            .getItem("accessToken")
+            ?.replace(/"/g, "")}`,
+        },
+        body: JSON.stringify({ jobId }),
+      })
+        .then((res) => res.json())
+
+        .catch(() =>
+          toast({
+            variant: "destructive",
+            title: "Error",
+            description: "User not found",
+          })
+        ),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("appliedJobs");
       },
-      body: JSON.stringify({ jobId }),
-    })
-      .then((res) => res.json())
-      .catch(() =>
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: "User not found",
-        })
-      )
+    }
+  );
+
+  const { mutate: mutateWithdraw } = useMutation(
+    (jobId: number) =>
+      fetch(`${import.meta.env.VITE_API_URL}/jobs/${jobId}/withdraw`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage
+            .getItem("accessToken")
+            ?.replace(/"/g, "")}`,
+        },
+        body: JSON.stringify({ jobId }),
+      })
+        .then((res) => res.json())
+
+        .catch(() =>
+          toast({
+            variant: "destructive",
+            title: "Error",
+            description: "User not found",
+          })
+        ),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("appliedJobs");
+      },
+    }
   );
 
   const applyJobHandler = (jobId: number) => {
     mutate(jobId);
+  };
+
+  const WithdrawJobHandler = (jobId: number) => {
+    mutateWithdraw(jobId);
   };
 
   return (
@@ -63,12 +110,17 @@ export default function SingleJob(job: IJobs) {
       <DialogTrigger asChild>
         <div
           className={clsx(
-            "pl-4 pr-2 py-4 shadow-lg flex items-center rounded-md md:px-16 hover:transition hover:shadow-xl hover:bg-gray-50 cursor-pointer",
+            "pl-4 pr-2 py-4 shadow-lg flex items-center rounded-md md:px-16 hover:transition hover:shadow-xl hover:bg-gray-50 cursor-pointer relative",
             listType
               ? "flex-col text-center justify-center items-center space-y-2 "
               : "flex-row "
           )}
         >
+          {alreadyApplied && (
+            <span className="text-xs md:text-lg text-green-600 absolute left-0 top-5 -rotate-45">
+              Applied
+            </span>
+          )}
           <BackpackIcon className="w-6 h-6 md:w-12 md:h-12 " />
 
           <div className="flex-1 flex flex-col space-y-2 mx-4 md:mx-12">
@@ -113,7 +165,7 @@ export default function SingleJob(job: IJobs) {
           <p className="text-gray-600">{job.description}</p>
         </div>
 
-        <DialogFooter className="flex items-center space-x-4">
+        <DialogFooter className="flex flex-col items-center justify-center md:items-center md:space-x-4 space-y-4 md:space-y-0">
           <Button
             type="submit"
             variant="destructive"
@@ -122,23 +174,43 @@ export default function SingleJob(job: IJobs) {
           >
             Close
           </Button>
-          <Button
-            type="submit"
-            variant="outline"
-            className="active:bg-green-600 active:text-white hover:bg-green-600 hover:text-white"
-            onClick={() => {
-              applyJobHandler(job.id);
-              setIsDialogOpen(false);
-              toast({
-                variant: "default",
-                title: "Success",
-                description: "Job applied successfully",
-                duration: 2000,
-              });
-            }}
-          >
-            Apply Job
-          </Button>
+          {alreadyApplied ? (
+            <Button
+              type="submit"
+              variant="outline"
+              className="active:bg-green-600 active:text-white hover:bg-green-600 hover:text-white"
+              onClick={() => {
+                WithdrawJobHandler(job.id);
+                setIsDialogOpen(false);
+                toast({
+                  variant: "default",
+                  title: "Success",
+                  description: "Job Removed Succesfully",
+                  duration: 2000,
+                });
+              }}
+            >
+              Withdraw Job
+            </Button>
+          ) : (
+            <Button
+              type="submit"
+              variant="outline"
+              className="active:bg-green-600 active:text-white hover:bg-green-600 hover:text-white"
+              onClick={() => {
+                applyJobHandler(job.id);
+                setIsDialogOpen(false);
+                toast({
+                  variant: "default",
+                  title: "Success",
+                  description: "Job applied successfully",
+                  duration: 2000,
+                });
+              }}
+            >
+              Apply Job
+            </Button>
+          )}
         </DialogFooter>
       </DialogContent>
     </Dialog>

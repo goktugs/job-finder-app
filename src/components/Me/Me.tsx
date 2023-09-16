@@ -1,4 +1,4 @@
-import { IProfile } from "@/types/types";
+import { IUserUpdateRequest } from "@/types/types";
 import axios from "axios";
 import { useQuery } from "react-query";
 
@@ -17,6 +17,7 @@ import { useState } from "react";
 import { useMeSlice } from "@/store/meSlice";
 import { format } from "date-fns";
 import { useToast } from "../ui/use-toast";
+import { useTranslation } from "react-i18next";
 
 export default function Me() {
   const navigate = useNavigate();
@@ -43,7 +44,7 @@ export default function Me() {
     }
   };
 
-  const { data, isLoading, isFetching } = useQuery<IProfile>({
+  const { data, isLoading, isFetching } = useQuery<IUserUpdateRequest>({
     queryKey: ["me", refetchMe],
     queryFn: () => fetchMeUser(),
     refetchOnWindowFocus: false,
@@ -52,13 +53,15 @@ export default function Me() {
   const exitHandler = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
-    localStorage.removeItem("id");
+    localStorage.removeItem("userId");
     navigate("/");
   };
 
+  const { t } = useTranslation();
+
   return (
     <>
-      <Card className="hidden md:block morphismGlass md:font-josefin-sans md:text-center md:w-56 md:h-[900px] md:overflow-y-scroll ">
+      <Card className=" md:block morphismGlass md:font-josefin-sans md:text-center md:w-56 md:h-[900px] md:overflow-y-scroll ">
         {isLoading || isFetching ? (
           <LoadingSpinner />
         ) : (
@@ -83,12 +86,12 @@ export default function Me() {
                 <CardContent className="space-y-2 text-sm">
                   <div className="space-y-2 text-sm">
                     <p>
-                      Phone:{" "}
+                      {t("phone")}:{" "}
                       <span className="text-orange-600">{data?.phone}</span>
                     </p>
                     <p>{data?.email}</p>
                     <p>
-                      Date of Birth:{" "}
+                      {t("birth")}:{" "}
                       <span className="text-orange-600">
                         {data?.dateOfBirth && (
                           <span className="text-orange-600">
@@ -98,7 +101,7 @@ export default function Me() {
                       </span>{" "}
                     </p>
                     <p>
-                      Skills:{" "}
+                      {t("skills")}:{" "}
                       {data?.skills?.map((skill, index) => (
                         <span key={index} className="text-orange-600">
                           {skill}{" "}
@@ -106,11 +109,15 @@ export default function Me() {
                       ))}
                     </p>
                     <div>
-                      <p>Education: </p>
+                      <p>{t("education")}: </p>
                       {data?.education?.map((edu, index) => (
                         <div key={index} className="text-orange-600">
-                          <p>Degree {edu.degree}</p>
-                          <p>Institution {edu.institution}</p>
+                          <p>
+                            {t("education")} {edu.degree}
+                          </p>
+                          <p>
+                            {t("instituton")} {edu.institution}
+                          </p>
                           <p>
                             {edu.startDate} ~ {edu.endDate}{" "}
                           </p>
@@ -118,7 +125,7 @@ export default function Me() {
                       ))}
                     </div>
                     <div>
-                      <p>Experience: </p>
+                      <p>{t("experience")}: </p>
                       {data?.experience?.map((exp, index) => (
                         <div key={index} className="text-orange-600">
                           <p>{exp.company}</p>
@@ -130,7 +137,7 @@ export default function Me() {
                       ))}
                     </div>
                     <div>
-                      <p>Languages</p>
+                      <p>{t("language")}:</p>
                       {data?.languages?.map((lang, index) => (
                         <div key={index} className="text-orange-600">
                           <p>
@@ -147,14 +154,14 @@ export default function Me() {
                     className="flex-1"
                     variant="default"
                   >
-                    Edit
+                    {t("edit")}
                   </Button>
                   <Button
                     onClick={exitHandler}
                     className="flex-1"
                     variant="destructive"
                   >
-                    Exit
+                    {t("exit")}
                   </Button>
                 </CardFooter>
               </>

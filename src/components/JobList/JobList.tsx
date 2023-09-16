@@ -20,6 +20,7 @@ import useDebounce from "@/hooks/useDebounce";
 import Me from "../Me/Me";
 import axios from "axios";
 import { useToast } from "../ui/use-toast";
+import { getMeFn } from "@/api/authApi";
 
 export default function JobList() {
   const [page, setPage] = useState(1);
@@ -78,6 +79,12 @@ export default function JobList() {
       refetchOnWindowFocus: false,
     });
 
+  const { data: alreadyApplied } = useQuery({
+    queryKey: "appliedJobs",
+    queryFn: getMeFn,
+    select: (data) => data.appliedJobs,
+  });
+
   if (isError) {
     return <span>Error: {(error as Error).message}</span>;
   }
@@ -113,32 +120,47 @@ export default function JobList() {
               <ViewToggle />
             </div>
           </div>
-          <div
-            className={clsx(
-              "h-[75vh] max-h-[75vh] overflow-auto  pb-4 mt-2 ",
-              !listType
-                ? "flex flex-col space-y-4 md:space-y-8 md:px-4 md:pt-2 "
-                : "grid grid-cols-2 gap-8 sm:grid-cols-3 md:grid-cols-4"
-            )}
-          >
-            {isLoading || isFetching ? (
-              <LoadingSpinner />
-            ) : data?.data?.length === 0 ? (
-              <div className="flex justify-center items-center h-full">
-                <h1 className="text-2xl font-bold text-gray-500">
-                  No Jobs Found
-                </h1>
-              </div>
-            ) : (
-              <>
-                {data?.data?.map((job: IJobs) => (
-                  <SingleJob key={job.id} {...job} />
-                ))}
-              </>
-            )}
-          </div>
+          {isLoading || isFetching ? (
+            <LoadingSpinner />
+          ) : (
+            <div
+              className={clsx(
+                "h-[75vh] max-h-[75vh] overflow-auto  pb-4 mt-2 ",
+                !listType
+                  ? "flex flex-col space-y-4 md:space-y-8 md:px-4 md:pt-2 "
+                  : "grid grid-cols-2 gap-8 sm:grid-cols-3 md:grid-cols-4"
+              )}
+            >
+              {isLoading || isFetching ? (
+                <LoadingSpinner />
+              ) : data?.data?.length === 0 ? (
+                <div className="flex justify-center items-center h-full">
+                  <h1 className="text-2xl font-bold text-gray-500">
+                    No Jobs Found
+                  </h1>
+                </div>
+              ) : (
+                <>
+                  {data?.data?.map((job: IJobs) => {
+                    const isJobAlreadyApplied = alreadyApplied?.some(
+                      (appliedJob) => appliedJob === job.id
+                    );
+                    return (
+                      <SingleJob
+                        alreadyApplied={isJobAlreadyApplied}
+                        key={job.id}
+                        job={job}
+                      />
+                    );
+                  })}
+                </>
+              )}
+            </div>
+          )}
         </div>
-        <Me />
+        <div className="hidden md:block">
+          <Me />
+        </div>
       </div>
     </>
   );

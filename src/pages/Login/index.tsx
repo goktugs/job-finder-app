@@ -1,9 +1,4 @@
-// fixme dönen hata mesajlarını göster. axios kurulmalı
-// fixme toast positon
-//  fixme hata yanlış
-
 import { Button } from "@/components/ui/button";
-import axios from "axios";
 import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 
 import {
@@ -24,6 +19,9 @@ import { Link, useNavigate } from "react-router-dom";
 import * as z from "zod";
 import { useState } from "react";
 import { Toggle } from "@/components/ui/toggle";
+import { loginUserFn } from "@/api/authApi";
+import { useTranslation } from "react-i18next";
+import { RoughNotation } from "react-rough-notation";
 
 const LoginSchema = z.object({
   email: z.string().email(),
@@ -31,7 +29,12 @@ const LoginSchema = z.object({
 });
 
 export default function Login() {
+  const navigate = useNavigate();
+
   const { toast } = useToast();
+
+  const { t } = useTranslation();
+
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
@@ -40,29 +43,25 @@ export default function Login() {
     },
   });
 
-  const navigate = useNavigate();
-
-  const { mutate, isLoading } = useMutation(
-    (data: z.infer<typeof LoginSchema>) =>
-      axios
-        .post(`${import.meta.env.VITE_API_URL}/login`, data)
-        .then((res) => res.data),
-    {
-      onSuccess: (data) => {
-        localStorage.setItem("accessToken", JSON.stringify(data.accessToken));
-        localStorage.setItem("refreshToken", JSON.stringify(data.refreshToken));
-        localStorage.setItem("id", JSON.stringify(data.user.id));
-        navigate("/jobs");
-      },
-      onError: () => {
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: "User not found",
-        });
-      },
-    }
-  );
+  const { mutate, isLoading } = useMutation(loginUserFn, {
+    onSuccess: (data) => {
+      toast({
+        title: "Login Success",
+        description: "You have successfully logged in.",
+      });
+      localStorage.setItem("accessToken", data.accessToken);
+      localStorage.setItem("refreshToken", data.refreshToken);
+      localStorage.setItem("userId", data.user.id);
+      navigate("/jobs");
+    },
+    onError: (error) => {
+      toast({
+        title: "Login Failed",
+        description: error.response.data.message,
+        variant: "destructive",
+      });
+    },
+  });
 
   const onSubmit = (data: z.infer<typeof LoginSchema>) => {
     mutate(data);
@@ -77,20 +76,27 @@ export default function Login() {
       ) : (
         <>
           <div className="flex flex-col space-y-6">
-            <h1 className="text-3xl text-main-gray  font-bold ">
-              Sign In To Job Finder{" "}
+            <h1 className="text-3xl text-main-brownish  font-bold ">
+              {t("login1")}
             </h1>
             <h3>
-              <span className="text-main-green">Or </span>
-              <span className="text-main-green border-b-4 border-main-green">
-                <Link to="/signup">create your account</Link>
+              <RoughNotation
+                show
+                type={"circle"}
+                strokeWidth={3}
+                color="#FFA500"
+              >
+                <span className="text-main-brownish text-2xl">{t("or")}</span>
+              </RoughNotation>
+              <span className="text-main-bronze border-b-2 border-main-gray border-ani">
+                <Link to="/signup"> {t("createAcc")} </Link>
               </span>
             </h3>
           </div>
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className="space-y-8 bg-main-gray rounded-md w-80 px-8 pb-16 pt-8 "
+              className="space-y-8 bg-main-brownish rounded-md w-80 px-8 pb-16 pt-8 "
             >
               <FormField
                 control={form.control}
@@ -104,7 +110,7 @@ export default function Login() {
                       <Input placeholder="E-Mail" {...field} />
                     </FormControl>
                     <FormMessage
-                      className="text-white text-sm font-semibold 
+                      className="text-red-600 text-sm font-semibold 
                   animate-[bounce_3s_ease-in-out_infinite]"
                     />
                   </FormItem>
@@ -116,7 +122,7 @@ export default function Login() {
                 render={({ field }) => (
                   <FormItem className="text-left">
                     <FormLabel className="text-semibold text-lg">
-                      Password
+                      {t("password")}
                     </FormLabel>
                     <FormControl>
                       <div className="flex space-x-1">
@@ -140,7 +146,7 @@ export default function Login() {
                       </div>
                     </FormControl>
                     <FormMessage
-                      className="text-white text-sm font-semibold 
+                      className="text-red-600 text-sm font-semibold 
                   animate-[bounce_3s_ease-in-out_infinite]
                 "
                     />
@@ -148,10 +154,10 @@ export default function Login() {
                 )}
               />
               <Button
-                className="w-full bg-main-green text-black font-bold text-md hover:bg-main-green hover:text-black"
+                className="w-full bg-main-pinkish text-main-brownish font-bold text-md"
                 type="submit"
               >
-                Login
+                {t("login")}
               </Button>
             </form>
           </Form>
