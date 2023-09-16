@@ -37,5 +37,17 @@
   "findJ8": "İşleri Filtrelemek Hiç Bu kadar Kolay Olmamıştı",
   "findJ9": "İşleri Görmek İçin Tıkla",
   "findJ10": "Üye Olduktan Sonra, İşleri Görebilirsiniz",
-  "findJ11": "Giriş Yap"
+  "findJ11": "Giriş Yap",
+  "login1": "Job Finder'a Giriş Yapın",
+  "or": "veya",
+  "createAcc": "Hesap Oluştur",
+  "login": "Giriş Yap",
+  "sortBy": "Şuna Göre Sırala",
+  "ascending": "Artan",
+  "descending": "Azalan",
+  "reset": "Sıfırla",
+  "birth": "Doğum Tarihi",
+  "instituton": "Kurum",
+  "edit": "Düzenle",
+  "exit": "Çıkış"
 }

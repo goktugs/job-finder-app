@@ -37,5 +37,17 @@
   "findJ8": "You Can Filter Jobs By Categories",
   "findJ9": "Go To Jobs Page",
   "findJ10": "After You Sign Up, You Can Apply For Jobs",
-  "findJ11": "Sign In"
+  "findJ11": "Sign In",
+  "login1": "Sign In To Job Finder",
+  "or": "or",
+  "createAcc": "Create Your Account",
+  "login": "Login",
+  "sortBy": "Sort By",
+  "ascending": "Ascending",
+  "descending": "Descending",
+  "reset": "Reset",
+  "birth": "Date of Birth",
+  "instituton": "Institution",
+  "edit": "Edit",
+  "exit": "Exit"
 }

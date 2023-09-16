@@ -38,6 +38,11 @@ module.exports = {
       colors: {
         "main-green": "#499969",
         "main-gray": "#3c3737",
+        "main-pinkish": "#FEEFEF",
+        "main-brownish": "#b2a7a7",
+        "main-yellowish": "#fef5ef",
+        "main-pink": "#feeffa",
+        "main-bronze": "#b2a7af",
       },
     },
   },

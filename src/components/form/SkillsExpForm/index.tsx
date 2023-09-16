@@ -1,3 +1,5 @@
+// fixme add more than one skills
+
 import { AllFormValues } from "@/pages/Signup";
 import React from "react";
 import FormWrapper from "../FormWrapper";
