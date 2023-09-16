@@ -143,6 +143,9 @@ export default function Signup() {
       onError: (error) => {
         toast({
           title: "Login Failed",
+          // error type should be unknown see 'https://stackoverflow.com/questions/72321623/whats-the-type-of-react-querys-error-and-how-to-handle-different-cases'
+
+          // @ts-ignore
           description: error.response.data.message + " Email already exists",
           variant: "destructive",
         });

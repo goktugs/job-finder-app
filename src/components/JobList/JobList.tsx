@@ -142,9 +142,10 @@ export default function JobList() {
               ) : (
                 <>
                   {data?.data?.map((job: IJobs) => {
-                    const isJobAlreadyApplied = alreadyApplied?.some(
-                      (appliedJob) => appliedJob === job.id
-                    );
+                    const isJobAlreadyApplied =
+                      alreadyApplied?.some(
+                        (appliedJob) => appliedJob === job.id.toString()
+                      ) || false;
                     return (
                       <SingleJob
                         alreadyApplied={isJobAlreadyApplied}

@@ -32,6 +32,7 @@ export interface ILoginResponse {
   tokenType: string;
   refreshToken: string;
   user: IUser;
+  appliedJobs?: string[];
 }
 
 export interface IJobsResponse {
