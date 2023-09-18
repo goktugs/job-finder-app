@@ -1,5 +1,4 @@
 import { IUserUpdateRequest } from "@/types/types";
-import axios from "axios";
 import { useQuery } from "react-query";
 
 import {
@@ -14,41 +13,30 @@ import LoadingSpinner from "../ui/loadingSpinner";
 import { useNavigate } from "react-router-dom";
 import EditMeForm from "./EditMe";
 import { useState } from "react";
-import { useMeSlice } from "@/store/meSlice";
 import { format } from "date-fns";
 import { useToast } from "../ui/use-toast";
 import { useTranslation } from "react-i18next";
+import { getMeProfileFn } from "@/api/authApi";
 
 export default function Me() {
   const navigate = useNavigate();
   const [isEditOpen, setIsEditOpen] = useState<boolean>(false);
-  const refetchMe = useMeSlice((state) => state.refetchMe);
   const { toast } = useToast();
 
-  const fetchMeUser = async () => {
-    try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/user`, {
-        headers: {
-          Authorization: `Bearer ${localStorage
-            .getItem("accessToken")
-            ?.replace(/"/g, "")}`,
-        },
-      });
-      return response.data;
-    } catch (err) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Something went wrong",
-      });
+  const { data, isLoading, isFetching } = useQuery<IUserUpdateRequest>(
+    ["me"],
+    getMeProfileFn,
+    {
+      refetchOnWindowFocus: false,
+      onError: (err) => {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: `Something went wrong ${err} `,
+        });
+      },
     }
-  };
-
-  const { data, isLoading, isFetching } = useQuery<IUserUpdateRequest>({
-    queryKey: ["me", refetchMe],
-    queryFn: () => fetchMeUser(),
-    refetchOnWindowFocus: false,
-  });
+  );
 
   const exitHandler = () => {
     localStorage.removeItem("accessToken");
@@ -145,6 +133,10 @@ export default function Me() {
                           </p>
                         </div>
                       ))}
+                    </div>
+                    <div>
+                      {data?.address.city}
+                      {data?.address.country} {data?.address.details}
                     </div>
                   </div>
                 </CardContent>

@@ -6,6 +6,8 @@ import Signup from "./pages/Signup";
 import Jobs from "./pages/Jobs";
 import NotFound from "./pages/NotFound";
 import "./i18n";
+import { Toaster } from "./components/ui/toaster";
+import PrivateRoute from "./PrivateRoute";
 
 function App() {
   return (
@@ -15,11 +17,14 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/jobs" element={<Jobs />} />
+          <Route element={<PrivateRoute />}>
+            <Route path="/jobs" element={<Jobs />} />
+          </Route>
         </Route>
         <Route path="/404" element={<NotFound />} />
         <Route path="*" element={<Navigate to="/404" replace />} />
       </Routes>
+      <Toaster />
     </>
   );
 }

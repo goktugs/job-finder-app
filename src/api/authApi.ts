@@ -65,6 +65,15 @@ export const loginUserFn = async (user: ILoginRequest) => {
   return response.data;
 };
 
+export const getMeProfileFn = async () => {
+  const response = await authApi.get<IUserUpdateRequest>("/user", {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+    },
+  });
+  return response.data;
+};
+
 export const getMeFn = async () => {
   const response = await authApi.get<ILoginResponse>("/profile", {
     headers: {

@@ -21,10 +21,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
-import { useMutation } from "react-query";
-import { useMeSlice } from "@/store/meSlice";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { Dispatch, SetStateAction } from "react";
+import { getMeProfileFn, updateUserInfoFn } from "@/api/authApi";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -90,25 +89,26 @@ export default function EditMeForm({
     },
   });
 
-  const refetchMe = useMeSlice((state) => state.refetchMe);
-  const setRefetchMe = useMeSlice((state) => state.setRefetchMe);
+  const queryClient = useQueryClient();
 
-  const { mutate } = useMutation((data) => {
-    const resp = axios.put(`${import.meta.env.VITE_API_URL}/user`, data, {
-      headers: {
-        accept: "application/json",
-        Authorization: `Bearer ${localStorage
-          .getItem("accessToken")
-          ?.replace(/"/g, "")}`,
-      },
-    });
-    return resp;
+  const { data: currUser } = useQuery(["meProfile"], getMeProfileFn, {
+    refetchOnWindowFocus: false,
+    staleTime: Infinity,
   });
 
+  const { mutate } = useMutation(updateUserInfoFn, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("me");
+    },
+  });
   const onSubmit = (data: any) => {
-    mutate(data);
+    const updatedData = {
+      ...currUser,
+      ...data,
+    };
+    console.log(updatedData);
+    mutate(updatedData);
     setIsEditOpen(false);
-    setRefetchMe(!refetchMe);
   };
 
   return (
