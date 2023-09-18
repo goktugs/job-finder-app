@@ -62,7 +62,7 @@ The platform should allow show job listings and allow users to apply for jobs.
 ### Links
 
 - Live Site URL: [https://shft-job-finder-app.vercel.app/](https://shft-job-finder-app.vercel.app/)
-- Development URL: [shft-job-finder-ly9jjnnmf-goktugs.vercel.app](shft-job-finder-ly9jjnnmf-goktugs.vercel.app)
+- Development URL: [shft-job-finder-ly9jjnnmf-goktugs.vercel.app](shft-job-finder-app-git-development-goktugs.vercel.app)
 
 ## My process
 
