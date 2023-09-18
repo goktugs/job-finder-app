@@ -80,7 +80,7 @@ export default function PersonalInfoForm({
             type="number"
             name="phone"
             id="phone"
-            placeholder="e.g. +90 555 555 55 55"
+            placeholder="e.g. 555 555 55 55"
             value={phone}
             onChange={(e) => updateForm({ phone: e.target.value })}
             className="w-full text-white"
