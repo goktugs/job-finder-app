@@ -1,6 +1,6 @@
 # Lincatin Job Finder App
 
-**Project description
+Project description
 This is a task assignment for FE position at SHFT. 
 
 ## Table of contents
@@ -50,19 +50,25 @@ The platform should allow show job listings and allow users to apply for jobs.
 
 ### Screenshot
 
-![image](https://github.com/goktugs/shft-job-finder-app/assets/86847572/b443db93-1e25-4fc1-9a3f-7cab451771bd)
 
-![image](https://github.com/goktugs/shft-job-finder-app/assets/86847572/20209b5c-f93d-4015-a4a1-c45981ae99d5)
+![image](https://github.com/goktugs/job-finder-app/assets/86847572/dac39454-c6db-40c5-92ae-67f59954e63a)
 
-![image](https://github.com/goktugs/shft-job-finder-app/assets/86847572/cf3d2c8e-282f-4eb7-abd4-db374e5d7932)
+![image](https://github.com/goktugs/job-finder-app/assets/86847572/bab940e5-d9ff-4ae6-9543-2283ba7b9c2f)
 
-![image](https://github.com/goktugs/shft-job-finder-app/assets/86847572/a8ef1865-b49e-43aa-a75e-63d76a58d4d9)
+![image](https://github.com/goktugs/job-finder-app/assets/86847572/f52d089e-4b18-4923-90f0-b7f783385561)
+
+![image](https://github.com/goktugs/job-finder-app/assets/86847572/2a21e213-5516-4fd3-a9fd-251d595031ef)
+
+![image](https://github.com/goktugs/job-finder-app/assets/86847572/6ea148f1-3f58-474d-a59b-f1aa5221b440)
+
+
 
 
 ### Links
 
 - Live Site URL: [https://shft-job-finder-app.vercel.app/](https://shft-job-finder-app.vercel.app/)
 - Development URL: [shft-job-finder-ly9jjnnmf-goktugs.vercel.app](shft-job-finder-app-git-development-goktugs.vercel.app)
+
 
 ## My process
 
